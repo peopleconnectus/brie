@@ -78,12 +78,12 @@ var authFilter = function(hs){
                 setSessionIdResponseHeader(callback);
             }
         ],
-        function(err, results) {
-            //save respCookies to and xSessionId handOff object to return to server.js
-            handOff.respCookies = respCookies;
-            handOff.xSessionId = xSessionId;
-            callback(null);
-        });
+            function(err, results) {
+                //save respCookies to and xSessionId handOff object to return to server.js
+                handOff.respCookies = respCookies;
+                handOff.xSessionId = xSessionId;
+                callback(null);
+            });
     };
 
     this.scribeFilterIn = function(callback){
@@ -98,14 +98,25 @@ var authFilter = function(hs){
                 checkScribeObj(callback);
             }
         ],
-        function(){
-            handOff.scribeObj = scribeObj;
-            callback(null);
-        });
+            function(){
+                //Add scribe object to outgoing handOff obj.
+                handOff.scribeObj = scribeObj;
+                //Set session cookie to outgoing handOff obj for HTTP Response
+                handOff.sessionCookie = sessionCookie;
+                callback(null);
+            });
     };
 
     this.canvasAutoLoginFilter = function(callback){
         var err;
+        /**
+         * Is authenticated flag not set on scribe?
+         * Is autoLogin flag set on scribe?
+         * Are either "remember" or "cmates" cookies present in Request?
+         * If true to any of the above and request is POST redirect to autoLogin
+         * If true to any of the above and request is NOT POST and referrer matches
+         * one of configured domains from which posts should be autoLogged in redirect to autoLogin
+         */
         if(!scribeObj.authenticated || scribeObj.autoLogin || (reqCookies.cmates || reqCookies.remember)){
             if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
         };
@@ -113,7 +124,9 @@ var authFilter = function(hs){
     };
 
     this.scribeFilterOut = function(callback){
+        //Was this Scribe object newly created, or updated since it was last saved?
         if(scribeObj.version ==1){
+            //if newly created save scribe object to sessions DB
             var scribeStr = JSON.stringify(scribeObj);
             var req = http.request(mlUtil.RESTOptions('/sessions/scribe','POST',{'Content-Type': 'application/json','Content-Length': scribeStr.length}),function(res){
                 var responseString = '';
@@ -203,8 +216,8 @@ var authFilter = function(hs){
 
     //Is "session" cookie present in request?
     var checkSessionCookie = function(callback){
-         //If no "session" cookie Create New "session" cookie with newly created sessionId
-         // and a randomly picked datasource id portion (a value from 0 - 2)
+        //If no "session" cookie Create New "session" cookie with newly created sessionId
+        // and a randomly picked datasource id portion (a value from 0 - 2)
         sessionCookie = reqCookies.session || (Math.floor(Math.random() * (2 - 0 + 1)) + 0) + ident;
         callback();
     };
@@ -223,8 +236,9 @@ var authFilter = function(hs){
             });
         });
     };
-
+    //Found matching scribe record?
     var checkScribeObj = function(callback){
+        //if no record found create new scribe object representing a visitor session
         if(scribeObj.errorCode == '404'){
             var req = http.get(mlUtil.RESTOptions('/sessions/scribe','POST'), function(res){
                 res.setEncoding('utf8');
