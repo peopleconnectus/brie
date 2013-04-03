@@ -2,7 +2,7 @@ var http = require('http');
 var cookie = require('cookie');
 var async = require('async');
 var mlUtil = require('mlUtil');
-var dateFormat = require('dateformat/lib/dateformat.js');
+var dateFormat = require('dateFormat');
 
 var authFilter = function(hs){
 
@@ -10,13 +10,13 @@ var authFilter = function(hs){
         requestType = "POST",
         ident,
         newGlobalId = false,
-        newUTC,
         reqCookies = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : {},
         respCookies,
         mlVisitor,
         sessionCookie,
         xSessionId,
         errMsg,
+        handOff = {},
         scribeObj;
 
     hs.cookieObj = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : '';
@@ -27,22 +27,23 @@ var authFilter = function(hs){
             function(callback){
                 self.salesFilter(callback);
             },
-            function(handOff,callback){
-                self.globalIdFilter(handOff,callback);
+            function(callback){
+                self.globalIdFilter(callback);
             },
-            function(handOff,callback){
-                self.scribeFilterIn(handOff,callback);
+            function(callback){
+
+                self.scribeFilterIn(callback);
             },
-            function(handOff,callback){
-                self.canvasAutoLoginFilter(handOff,callback);
+            function(callback){
+                self.canvasAutoLoginFilter(callback);
             },
-            function(handOff,callback){
-                self.scribeFilterOut(handOff,callback);
+            function(callback){
+                self.scribeFilterOut(callback);
             }
 
         ],
             function(err, results) {
-                outerCallback(err,results);
+                outerCallback(err,handOff);
             });
     };
 
@@ -54,11 +55,11 @@ var authFilter = function(hs){
         if(salesId){
             //interface with sales API once it is available;
         }else{
-            callback(null, hs);
+            callback(null);
         }
     };
 
-    this.globalIdFilter = function(handOff,callback){
+    this.globalIdFilter = function(callback){
 
         async.waterfall([
             function(callback){
@@ -78,11 +79,14 @@ var authFilter = function(hs){
             }
         ],
         function(err, results) {
-            callback(null,'ya');
+            //save respCookies to and xSessionId handOff object to return to server.js
+            handOff.respCookies = respCookies;
+            handOff.xSessionId = xSessionId;
+            callback(null);
         });
     };
 
-    this.scribeFilterIn = function(handOff,callback){
+    this.scribeFilterIn = function(callback){
         async.waterfall([
             function(callback){
                 checkSessionCookie(callback);
@@ -95,19 +99,20 @@ var authFilter = function(hs){
             }
         ],
         function(){
-            callback(null,'yo');
+            handOff.scribeObj = scribeObj;
+            callback(null);
         });
     };
 
-    this.canvasAutoLoginFilter = function(handOff,callback){
+    this.canvasAutoLoginFilter = function(callback){
         var err;
         if(!scribeObj.authenticated || scribeObj.autoLogin || (reqCookies.cmates || reqCookies.remember)){
             if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
         };
-        callback(err,'yo');
+        callback(err);
     };
 
-    this.scribeFilterOut = function(handOff,callback){
+    this.scribeFilterOut = function(callback){
         if(scribeObj.version ==1){
             var scribeStr = JSON.stringify(scribeObj);
             var req = http.request(mlUtil.RESTOptions('/sessions/scribe','POST',{'Content-Type': 'application/json','Content-Length': scribeStr.length}),function(res){
@@ -123,7 +128,7 @@ var authFilter = function(hs){
             req.write(scribeStr);
             req.end();
         }else{
-            callback(null,scribeObj);
+            callback(null);
         }
     };
 
@@ -133,10 +138,14 @@ var authFilter = function(hs){
     };
 
     //Global ID Filter functions
-
+    /**
+     * Is the "ident" cookie present?
+     * If not create new "ident" cookie using newly generated identifier.
+     * Then extract the GUID part of the cookie content and set it as a request attribute.
+     */
     var checkIdentCookie = function(callback){
-        if(hs.ident){
-            this.resp.ident = hs.ident.split('&')[1];
+        if(reqCookies.ident){
+            ident = reqCookies.ident.split('&')[1];
             callback(null);
         }else{
             var req = http.get(mlUtil.RESTOptions('/sessions/sessionid','POST'), function(res) {
@@ -155,26 +164,36 @@ var authFilter = function(hs){
         }
     };
 
+    //Reset expiry on the cookie to 30 min from now, and add it to the HTTP Response
     var setIdentCookie = function(callback){
         var now = new Date();
-        newUTC = now.setMinutes(now.getMinutes() + 30);
+        var newUTC = now.setMinutes(now.getMinutes() + 30);
         respCookies = "ident=" + newUTC + "&" + ident + "; expires="+dateFormat(new Date(newUTC),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+';';
         callback();
     };
 
+    //Is "ML_VISITOR'cookie present?  If none supplied set a new one based on prev set "ident" property and a timestamp.
     var checkMlVisitorCookie = function(callback){
-        //check for ML_VISITOR cookie.  If none supplied set a new one based on prev set "ident" property and a timestamp.
-        mlVisitor = reqCookies.ML_VISITOR || ident + dateFormat("yyyymmddHHMMss");
+        reqCookies.ML_VISITOR = '';
+        if(reqCookies.ML_VISITOR){
+            mlVisitor = reqCookies.ML_VISITOR;
+        }else{
+            var now = new Date();
+            mlVisitor = ident + dateFormat("yyyymmddHHMMss");
+            respCookies +="mlVisitor=" + mlVisitor + "; expires="+dateFormat(new Date(now.setYear(now.getFullYear() + 10)),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+';';
+        }
         callback();
     };
-
+    //Was a new global Id generated in this execution?
     var startSessionLog = function(callback){
         if(newGlobalId){
-            //TBD start session log if this.resp.newGlobalId is set to true;
+            //Write "sessionStart" log, passing global id from "ident" cookie and visitorId from "ML_VISITOR" cookie
+            //unclear how this will work in Node env
         };
         callback();
     };
 
+    //Set the "X-Session-ID" Response Header with the value of the global Id.
     var setSessionIdResponseHeader = function(callback){
         xSessionId = ident;
         callback();
@@ -182,12 +201,15 @@ var authFilter = function(hs){
 
     //Inbound Scribe Creation Filter functions
 
+    //Is "session" cookie present in request?
     var checkSessionCookie = function(callback){
-        //if we received a session cookie in our request use it if not creat a new one with random number from 0-2 + globalId;
+         //If no "session" cookie Create New "session" cookie with newly created sessionId
+         // and a randomly picked datasource id portion (a value from 0 - 2)
         sessionCookie = reqCookies.session || (Math.floor(Math.random() * (2 - 0 + 1)) + 0) + ident;
         callback();
     };
 
+    //Lookup sessions DB using sessionId from cookie
     var lookupSession = function(callback){
         var req = http.get(mlUtil.RESTOptions('/sessions/scribe/'+sessionCookie), function(res) {
             res.setEncoding('utf8');
