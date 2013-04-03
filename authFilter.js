@@ -2,7 +2,7 @@ var http = require('http');
 var cookie = require('cookie');
 var async = require('async');
 var mlUtil = require('mlUtil');
-var dateFormat = require('dateFormat');
+var dateFormat = require('dateformat/lib/dateformat.js');
 
 var authFilter = function(hs){
 
