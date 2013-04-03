@@ -5,13 +5,14 @@ var mlUtil = require('mlUtil');
 var dateFormat = require('dateformat/lib/dateformat.js');
 
 var authFilter = function(hs){
-
     var self = this,
         requestType = "POST",
         ident,
         newGlobalId = false,
         reqCookies = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : {},
         respCookies,
+        salesId,
+        salesProgram,
         mlVisitor,
         sessionCookie,
         xSessionId,
@@ -31,7 +32,6 @@ var authFilter = function(hs){
                 self.globalIdFilter(callback);
             },
             function(callback){
-
                 self.scribeFilterIn(callback);
             },
             function(callback){
@@ -50,13 +50,20 @@ var authFilter = function(hs){
     // BEGIN FILTER DEFINITIONS
 
     this.salesFilter = function(callback){
-        var salesId = hs.query.s || matchUrlPattern(hs.url);
-
-        if(salesId){
-            //interface with sales API once it is available;
-        }else{
+        async.waterfall([
+            function(callback){
+                checkSalesParams(callback);
+            },
+            function(callback){
+                lookupSalesProgram(callback);
+            }
+        ],
+        function(err,results){
+            //If a sales Program is returned set to salesProgram property to outgoing handOff obj.
+            //expecting 'id','name','beaconUrl' and 'interactionBeaconUrl'
+            if(salesProgram) handOff.salesProgram = salesProgram;
             callback(null);
-        }
+        })
     };
 
     this.globalIdFilter = function(callback){
@@ -78,12 +85,12 @@ var authFilter = function(hs){
                 setSessionIdResponseHeader(callback);
             }
         ],
-            function(err, results) {
-                //save respCookies to and xSessionId handOff object to return to server.js
-                handOff.respCookies = respCookies;
-                handOff.xSessionId = xSessionId;
-                callback(null);
-            });
+        function(err, results) {
+            //save respCookies to and xSessionId handOff object to return to server.js
+            handOff.respCookies = respCookies;
+            handOff.xSessionId = xSessionId;
+            callback(null);
+        });
     };
 
     this.scribeFilterIn = function(callback){
@@ -147,10 +154,42 @@ var authFilter = function(hs){
 
     //Sales Program Filter functions
 
+    //Is the "s"parameter present in Request?
+    //If true use the value of the "s" param as the Sales Number
+    //If false Does the referer match a predetermined set of URL patterns?
+    var checkSalesParams = function(callback){
+        //Set the Sales Program Id as a Request Attribute
+        salesId = hs.query.s || matchUrlPattern(hs.url);
+        callback(null);
+    };
+
+    //match url to set of predetermined sales based URL patterns
     var matchUrlPattern = function(){
+        //TBD function to use the mapped Sales Number against the matched URL pattern from config.
+        return null;
+    };
+
+    var lookupSalesProgram = function(callback){
+        if(salesId){
+            var req = http.get(mlUtil.RESTOptions('/salesprograms/'+salesId), function(res) {
+                res.setEncoding('utf8');
+
+                var data = '';
+                res.on('data', function (chunk) {
+                    data += chunk;
+                });
+                res.on('end', function() {
+                    salesProgram = JSON.parse(data);
+                    callback(null)
+                })
+            })
+        }else{
+            callback(null);
+        }
     };
 
     //Global ID Filter functions
+
     /**
      * Is the "ident" cookie present?
      * If not create new "ident" cookie using newly generated identifier.
