@@ -120,12 +120,11 @@ var authFilter = function(hs){
          * Is authenticated flag not set on scribe?
          * Is autoLogin flag set on scribe?
          * Are either "remember" or "cmates" cookies present in Request?
-         * If true to any of the above and request is POST redirect to autoLogin
-         * If true to any of the above and request is NOT POST and referrer matches
-         * one of configured domains from which posts should be autoLogged in redirect to autoLogin
+         * If true to any of the above redirect to autoLogin
          */
-        if(!scribeObj.authenticated || scribeObj.autoLogin || (reqCookies.cmates || reqCookies.remember)){
-            if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
+        if(!scribeObj.authenticated || scribeObj.autoLogin || (!reqCookies.cmates && !reqCookies.remember)){
+            //if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
+            err = 'redirect';
         };
         callback(err);
     };
