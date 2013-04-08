@@ -23,3 +23,23 @@ util.checkPermission = function(permissionObj,permission){
     });
     return hasPermission;
 };
+
+util.handleNonSocketRequest = function(request,response) {
+    var baseUrl = request.url.split('?')
+    if (baseUrl[0] == '/static/config.js') {
+        util.writeConfigJsonInResponse(response);
+    }
+};
+
+util.writeConfigJsonInResponse = function(response) {
+    var configsAvailToClient = new Array ('links','facebook'); // add as many top level attributes from the CONFIG object as needed
+    response.write('var envConf = {');
+    for (var i=0; i<configsAvailToClient.length; i++) {
+        var key = configsAvailToClient[i];
+        response.write('"'+key+'":'+JSON.stringify(CONFIG[key]));
+        if (i < configsAvailToClient.length - 1) {
+            response.write(',');
+        }
+    }
+    response.write('};');
+};

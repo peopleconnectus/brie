@@ -2,17 +2,16 @@ var http = require('http');
 var cookie = require('cookie');
 var async = require('async');
 var mlUtil = require('mlUtil');
-var dateFormat = require('dateformat/lib/dateformat.js');
+var dateFormat = require('dateFormat');
 
 var authFilter = function(hs){
+
     var self = this,
         requestType = "POST",
         ident,
         newGlobalId = false,
         reqCookies = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : {},
         respCookies,
-        salesId,
-        salesProgram,
         mlVisitor,
         sessionCookie,
         xSessionId,
@@ -32,6 +31,7 @@ var authFilter = function(hs){
                 self.globalIdFilter(callback);
             },
             function(callback){
+
                 self.scribeFilterIn(callback);
             },
             function(callback){
@@ -50,20 +50,13 @@ var authFilter = function(hs){
     // BEGIN FILTER DEFINITIONS
 
     this.salesFilter = function(callback){
-        async.waterfall([
-            function(callback){
-                checkSalesParams(callback);
-            },
-            function(callback){
-                lookupSalesProgram(callback);
-            }
-        ],
-        function(err,results){
-            //If a sales Program is returned set to salesProgram property to outgoing handOff obj.
-            //expecting 'id','name','beaconUrl' and 'interactionBeaconUrl'
-            if(salesProgram) handOff.salesProgram = salesProgram;
+        var salesId = hs.query.s || matchUrlPattern(hs.url);
+
+        if(salesId){
+            //interface with sales API once it is available;
+        }else{
             callback(null);
-        })
+        }
     };
 
     this.globalIdFilter = function(callback){
@@ -105,34 +98,22 @@ var authFilter = function(hs){
                 checkScribeObj(callback);
             }
         ],
-            function(){
-                //Add scribe object to outgoing handOff obj.
-                handOff.scribeObj = scribeObj;
-                //Set session cookie to outgoing handOff obj for HTTP Response
-                handOff.sessionCookie = sessionCookie;
-                callback(null);
-            });
+        function(){
+            handOff.scribeObj = scribeObj;
+            callback(null);
+        });
     };
 
     this.canvasAutoLoginFilter = function(callback){
         var err;
-        /**
-         * Is authenticated flag not set on scribe?
-         * Is autoLogin flag set on scribe?
-         * Are either "remember" or "cmates" cookies present in Request?
-         * If true to any of the above redirect to autoLogin
-         */
-        if(!scribeObj.authenticated || scribeObj.autoLogin || (!reqCookies.cmates && !reqCookies.remember)){
-            //if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
-            err = 'redirect';
+        if(!scribeObj.authenticated || scribeObj.autoLogin || (reqCookies.cmates || reqCookies.remember)){
+            if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
         };
         callback(err);
     };
 
     this.scribeFilterOut = function(callback){
-        //Was this Scribe object newly created, or updated since it was last saved?
         if(scribeObj.version ==1){
-            //if newly created save scribe object to sessions DB
             var scribeStr = JSON.stringify(scribeObj);
             var req = http.request(mlUtil.RESTOptions('/sessions/scribe','POST',{'Content-Type': 'application/json','Content-Length': scribeStr.length}),function(res){
                 var responseString = '';
@@ -153,42 +134,10 @@ var authFilter = function(hs){
 
     //Sales Program Filter functions
 
-    //Is the "s"parameter present in Request?
-    //If true use the value of the "s" param as the Sales Number
-    //If false Does the referer match a predetermined set of URL patterns?
-    var checkSalesParams = function(callback){
-        //Set the Sales Program Id as a Request Attribute
-        salesId = hs.query.s || matchUrlPattern(hs.url);
-        callback(null);
-    };
-
-    //match url to set of predetermined sales based URL patterns
     var matchUrlPattern = function(){
-        //TBD function to use the mapped Sales Number against the matched URL pattern from config.
-        return null;
-    };
-
-    var lookupSalesProgram = function(callback){
-        if(salesId){
-            var req = http.get(mlUtil.RESTOptions('/salesprograms/'+salesId), function(res) {
-                res.setEncoding('utf8');
-
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function() {
-                    salesProgram = JSON.parse(data);
-                    callback(null)
-                })
-            })
-        }else{
-            callback(null);
-        }
     };
 
     //Global ID Filter functions
-
     /**
      * Is the "ident" cookie present?
      * If not create new "ident" cookie using newly generated identifier.
@@ -254,8 +203,8 @@ var authFilter = function(hs){
 
     //Is "session" cookie present in request?
     var checkSessionCookie = function(callback){
-        //If no "session" cookie Create New "session" cookie with newly created sessionId
-        // and a randomly picked datasource id portion (a value from 0 - 2)
+         //If no "session" cookie Create New "session" cookie with newly created sessionId
+         // and a randomly picked datasource id portion (a value from 0 - 2)
         sessionCookie = reqCookies.session || (Math.floor(Math.random() * (2 - 0 + 1)) + 0) + ident;
         callback();
     };
@@ -274,9 +223,8 @@ var authFilter = function(hs){
             });
         });
     };
-    //Found matching scribe record?
+
     var checkScribeObj = function(callback){
-        //if no record found create new scribe object representing a visitor session
         if(scribeObj.errorCode == '404'){
             var req = http.get(mlUtil.RESTOptions('/sessions/scribe','POST'), function(res){
                 res.setEncoding('utf8');
