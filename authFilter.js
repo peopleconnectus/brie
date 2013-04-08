@@ -174,7 +174,6 @@ var authFilter = function(hs){
 
     //Is "ML_VISITOR'cookie present?  If none supplied set a new one based on prev set "ident" property and a timestamp.
     var checkMlVisitorCookie = function(callback){
-        reqCookies.ML_VISITOR = '';
         if(reqCookies.ML_VISITOR){
             mlVisitor = reqCookies.ML_VISITOR;
         }else{
