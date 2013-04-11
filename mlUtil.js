@@ -5,7 +5,7 @@ util.RESTOptions = function(path,method,headers,host,port){
     var options ={
         path : path,
         method : method ? method = method : method = "GET",
-        host : host ? host = host : host = CONFIG.links.apiBaseHost,
+        host : host ? host = host : host = "api.qa09.sea1.cmates.com", //CONFIG.links.apiBaseHost,
         port : port ? port = port : port = 80
     };
 
@@ -25,7 +25,9 @@ util.checkPermission = function(permissionObj,permission){
 };
 
 util.handleNonSocketRequest = function(request,response) {
-    var baseUrl = request.url.split('?')
+    var baseUrl = request.url.split('?');
+	console.log(baseUrl[0]);
+
     if (baseUrl[0] == '/static/config.js') {
         util.writeConfigJsonInResponse(response);
     }
