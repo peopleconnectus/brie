@@ -5,7 +5,7 @@ util.RESTOptions = function(path,method,headers,host,port){
     var options ={
         path : path,
         method : method ? method = method : method = "GET",
-        host : host ? host = host : host = 'api.qa09.sea1.cmates.com',
+        host : host ? host = host : host = CONFIG.links.apiBaseHost,
         port : port ? port = port : port = 80
     };
 
@@ -42,4 +42,5 @@ util.writeConfigJsonInResponse = function(response) {
         }
     }
     response.write('};');
+	response.end();
 };
