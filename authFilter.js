@@ -7,14 +7,16 @@ var dateFormat = require('dateformat/lib/dateformat.js');
 var authFilter = function(hs){
 
     var self = this,
+        redirect = false,
         requestType = "POST",
         ident,
         newGlobalId = false,
         reqCookies = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : {},
-        respCookies,
+        respCookies = {},
         mlVisitor,
         sessionCookie,
         xSessionId,
+        salesProgramId,
         errMsg,
         handOff = {},
         scribeObj;
@@ -50,13 +52,8 @@ var authFilter = function(hs){
     // BEGIN FILTER DEFINITIONS
 
     this.salesFilter = function(callback){
-        var salesId = hs.query.s || matchUrlPattern(hs.url);
-
-        if(salesId){
-            //interface with sales API once it is available;
-        }else{
-            callback(null);
-        }
+        salesProgramId = hs.query.s || matchUrlPattern(hs.url);
+        callback(null);
     };
 
     this.globalIdFilter = function(callback){
@@ -106,10 +103,16 @@ var authFilter = function(hs){
 
     this.canvasAutoLoginFilter = function(callback){
         var err;
-        if(!scribeObj.authenticated || scribeObj.autoLogin || (reqCookies.cmates || reqCookies.remember)){
-            if(requestType != "POST" || (requestType == "POST" && checkAutoLogDomains())) err = 'redirect';
-        };
-        callback(err);
+        handOff.redirect = false;
+        if(!scribeObj.authenticated){
+            if(scribeObj.autoLogin){
+                //the below logic needs to be clarified
+                if((reqCookies.cmates || reqCookies.remember) || (!reqCookies.cmates || !reqCookies.remember)){
+                    handOff.redirect = true;
+                }
+            }
+        }
+        callback();
     };
 
     this.scribeFilterOut = function(callback){
@@ -144,11 +147,22 @@ var authFilter = function(hs){
      * Then extract the GUID part of the cookie content and set it as a request attribute.
      */
     var checkIdentCookie = function(callback){
+
         if(reqCookies.ident){
             ident = reqCookies.ident.split('&')[1];
             callback(null);
         }else{
-            var req = http.get(mlUtil.RESTOptions('/sessions/sessionid','POST'), function(res) {
+            var reqHeader ={
+                "salesProgramId" : salesProgramId,
+                "visitorId" : mlVisitor,
+                "clientIPAddress" : hs.address.address,
+                "userAgent" : hs.headers["user-agent"],
+                "requestUrl" : hs.headers.referer,
+                "referer" : hs.headers.referer
+            };
+
+            var reqHeaderStr = JSON.stringify(reqHeader);
+            var req = http.get(mlUtil.RESTOptions('/sessions/sessionid','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
                 res.setEncoding('utf8');
                 var data = '';
                 res.on('data', function (chunk) {
@@ -161,6 +175,8 @@ var authFilter = function(hs){
                     callback();
                 })
             });
+            req.write(reqHeaderStr);
+            req.end();
         }
     };
 
@@ -168,7 +184,7 @@ var authFilter = function(hs){
     var setIdentCookie = function(callback){
         var now = new Date();
         var newUTC = now.setMinutes(now.getMinutes() + 30);
-        respCookies = "ident=" + newUTC + "&" + ident + "; expires="+dateFormat(new Date(newUTC),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+';';
+        respCookies.ident = "ident=" + newUTC + "&" + ident + "; expires="+dateFormat(new Date(newUTC),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+'; path=/; domain=.qa09.sea1.cmates.com;';
         callback();
     };
 
@@ -179,7 +195,7 @@ var authFilter = function(hs){
         }else{
             var now = new Date();
             mlVisitor = ident + dateFormat("yyyymmddHHMMss");
-            respCookies +="mlVisitor=" + mlVisitor + "; expires="+dateFormat(new Date(now.setYear(now.getFullYear() + 10)),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+';';
+            respCookies.mlVisitor = "ML_VISITOR=" + mlVisitor + "; expires="+dateFormat(new Date(now.setYear(now.getFullYear() + 10)),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+'; path=/; domain=.qa09.sea1.cmates.com;';
         }
         callback();
     };
@@ -204,7 +220,7 @@ var authFilter = function(hs){
     var checkSessionCookie = function(callback){
          //If no "session" cookie Create New "session" cookie with newly created sessionId
          // and a randomly picked datasource id portion (a value from 0 - 2)
-        sessionCookie = reqCookies.session || (Math.floor(Math.random() * (2 - 0 + 1)) + 0) + ident;
+        sessionCookie = reqCookies.session || (Math.floor(Math.random() * (2 - 0 + 1)) + 0) +'&' + ident;
         callback();
     };
 
@@ -224,7 +240,7 @@ var authFilter = function(hs){
     };
 
     var checkScribeObj = function(callback){
-        if(scribeObj.errorCode == '404'){
+        if(scribeObj.errorCode == '404' || scribeObj.errorCode == '400'){
             var req = http.get(mlUtil.RESTOptions('/sessions/scribe','POST'), function(res){
                 res.setEncoding('utf8');
                 var data = '';
