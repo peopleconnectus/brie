@@ -102,6 +102,7 @@ var authFilter = function(hs){
         ],
         function(){
             handOff.scribeObj = scribeObj;
+            console.log('scribeObj',handOff.scribeObj)
             callback(null);
         });
     };
