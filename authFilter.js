@@ -24,7 +24,7 @@ var authFilter = function(hs){
     hs.cookieObj = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : '';
 
     this.authInitHttp = function(outerCallback){
-
+        console.log('test 1')
         async.waterfall([
             function(callback){
                 self.salesFilter(callback);
@@ -153,7 +153,7 @@ var authFilter = function(hs){
      * Then extract the GUID part of the cookie content and set it as a request attribute.
      */
     var checkIdentCookie = function(callback){
-
+        console.log('yoooooooo')
         if(reqCookies.ident){
             ident = reqCookies.ident.split('&')[1];
             callback(null);
