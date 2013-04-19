@@ -24,7 +24,6 @@ var authFilter = function(hs){
     hs.cookieObj = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : '';
 
     this.authInitHttp = function(outerCallback){
-        console.log('test 1')
         async.waterfall([
             function(callback){
                 self.salesFilter(callback);
@@ -102,7 +101,6 @@ var authFilter = function(hs){
         ],
         function(){
             handOff.scribeObj = scribeObj;
-            console.log('scribeObj',handOff.scribeObj)
             callback(null);
         });
     };
@@ -153,7 +151,6 @@ var authFilter = function(hs){
      * Then extract the GUID part of the cookie content and set it as a request attribute.
      */
     var checkIdentCookie = function(callback){
-        console.log('yoooooooo')
         if(reqCookies.ident){
             ident = reqCookies.ident.split('&')[1];
             callback(null);
@@ -166,8 +163,7 @@ var authFilter = function(hs){
                 "requestUrl" : hs.headers.referer,
                 "referer" : hs.headers.referer
             };
-            console.log('reqHeader');
-            console.log(reqHeader);
+
             var reqHeaderStr = JSON.stringify(reqHeader);
             var req = http.get(mlUtil.RESTOptions('/sessions/sessionid?logSessionStart=true','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
                 res.setEncoding('utf8');
@@ -177,7 +173,6 @@ var authFilter = function(hs){
                 });
                 res.on('end', function(){
                     var obj = JSON.parse(data);
-                    console.log('reqheder Obj',obj)
                     ident = obj.id;
                     newGlobalId = true;
                     callback();
@@ -276,7 +271,10 @@ var authFilter = function(hs){
     //get User Permissions
 
     this.getUserPermissions = function(outerCallback){
-        require('../rest/userPermissions').get(scribeObj.registrationId,outerCallback);
+        if(scribeObj.registrationId)
+            require('../rest/userPermissions').get(scribeObj.registrationId,outerCallback);
+        else
+            outerCallback(null,{"records":[]});
     };
 };
 
