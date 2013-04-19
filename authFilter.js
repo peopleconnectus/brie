@@ -16,7 +16,7 @@ var authFilter = function(hs){
         mlVisitor,
         sessionCookie,
         xSessionId,
-        salesProgramId,
+        salesProgramId = 0,
         errMsg,
         handOff = {},
         scribeObj;
@@ -33,7 +33,6 @@ var authFilter = function(hs){
                 self.globalIdFilter(callback);
             },
             function(callback){
-
                 self.scribeFilterIn(callback);
             },
             function(callback){
@@ -45,6 +44,12 @@ var authFilter = function(hs){
 
         ],
             function(err, results) {
+//                console.log('session cookie',sessionCookie);
+//                console.log('ident Cookie',ident);
+//                console.log('mlVisitor Cookie',mlVisitor);
+//                console.log('scribe object',scribeObj);
+//                console.log('outgoing cookies',respCookies);
+
                 outerCallback(err,handOff);
             });
     };
@@ -52,7 +57,7 @@ var authFilter = function(hs){
     // BEGIN FILTER DEFINITIONS
 
     this.salesFilter = function(callback){
-        salesProgramId = hs.query.s || matchUrlPattern(hs.url);
+        salesProgramId = hs.query.s || matchUrlPattern(hs.url) || 0;
         callback(null);
     };
 
@@ -112,7 +117,7 @@ var authFilter = function(hs){
                 }
             }
         }
-        callback();
+        callback(null);
     };
 
     this.scribeFilterOut = function(callback){
@@ -160,9 +165,8 @@ var authFilter = function(hs){
                 "requestUrl" : hs.headers.referer,
                 "referer" : hs.headers.referer
             };
-
             var reqHeaderStr = JSON.stringify(reqHeader);
-            var req = http.get(mlUtil.RESTOptions('/sessions/sessionid','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
+            var req = http.get(mlUtil.RESTOptions('/sessions/sessionid?logSessionStart=true','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
                 res.setEncoding('utf8');
                 var data = '';
                 res.on('data', function (chunk) {
