@@ -166,6 +166,8 @@ var authFilter = function(hs){
                 "requestUrl" : hs.headers.referer,
                 "referer" : hs.headers.referer
             };
+            console.log('reqHeader');
+            console.log(reqHeader);
             var reqHeaderStr = JSON.stringify(reqHeader);
             var req = http.get(mlUtil.RESTOptions('/sessions/sessionid?logSessionStart=true','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
                 res.setEncoding('utf8');
@@ -175,6 +177,7 @@ var authFilter = function(hs){
                 });
                 res.on('end', function(){
                     var obj = JSON.parse(data);
+                    console.log('reqheder Obj',obj)
                     ident = obj.id;
                     newGlobalId = true;
                     callback();
