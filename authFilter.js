@@ -83,6 +83,7 @@ var authFilter = function(hs){
             //save respCookies to and xSessionId handOff object to return to server.js
             handOff.respCookies = respCookies;
             handOff.xSessionId = xSessionId;
+            handOff.ident = ident;
             callback(null);
         });
     };
