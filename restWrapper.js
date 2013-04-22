@@ -1,5 +1,5 @@
 var http = require('http');
-var mlUtil = require('mlUtil');
+
 var restWrapper = function(path,method,jsonReq,host,port){
     var data = '',
         self = this,
@@ -43,11 +43,11 @@ var restWrapper = function(path,method,jsonReq,host,port){
                 } catch(e){
                     resultObj = {'errorCode' : self.statusCode};
                 };
-
                 self.resultObj = resultObj;
+
                 if(self.statusCode !== 200) self.logError();
 
-                self.onEnd();
+                if(self.statusCode === 200) self.onEnd();
             });
         });
 
@@ -59,8 +59,8 @@ var restWrapper = function(path,method,jsonReq,host,port){
     this.logError = function(){
         var msg = "Reponse " + JSON.stringify(this.resultObj) + '\n';
             msg += 'Error occurred in restWrapper.js\n ';
-            msg += 'Request params \n';
-            msg += JSON.stringify(this.options);
+            msg += 'Request params ' + JSON.stringify(this.options);
+        console.log('error',msg);
     };
 };
 
