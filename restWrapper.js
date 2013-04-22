@@ -18,18 +18,18 @@ var restWrapper = function(path,method,jsonReq,host,port){
 
     this.resultObj = {};
 
-    this.getAsync = function(data){
+    this.asyncReq = function(data){
         this.asyncCallback = data;
-        this.get();
+        this.req();
     };
 
-    this.getSocket = function(data){
+    this.socketReq = function(data){
         this.socket = data.socket;
-        this.socketEmitName = data.socketEmitName;
-        this.get();
+        this.callbackName = data.callbackName;
+        this.req();
     };
 
-    this.get = function(){
+    this.req = function(){
         var req = http.get(self.options, function(res) {
             res.setEncoding('utf8');
             self.statusCode = res.statusCode;
@@ -68,7 +68,7 @@ restWrapper.prototype.onEnd = function(){
     if(this.asyncCallback)
         this.asyncCallback(null,this.resultObj);
     else if(this.socket)
-        this.socket.emit(this.resultObj,this.socketEmitName);
+        this.socket.emit(this.resultObj,this.callbackName);
     else
         return this.resultObj;
 };
