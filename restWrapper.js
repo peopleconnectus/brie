@@ -33,15 +33,21 @@ var restWrapper = function(path,method,host,port){
                 if(self.statusCode === 200 || self.statusCode === 400){
                     self.resultObj = JSON.parse(data);
                 }else{
+                    self.logError();
                     self.resultObj = {"errorCode" : self.statusCode};
                 }
                 self.onEnd();
             });
         });
-        req.on('error',function(){
-            self.onError();
-        });
         req.end();
+    };
+
+    this.logError = function(){
+        var msg = "Reponse " + this.statusCode + '\n';
+            msg += 'Error occurred in restWrapper.js\n ';
+            msg += 'Request params \n';
+            msg += JSON.stringify(this.options);
+        console.log('error',msg);
     };
 };
 
@@ -54,9 +60,5 @@ restWrapper.prototype.onEnd = function(){
         return this.resultObj;
     }
 };
-
-restWrapper.prototype.onError = function(){
-    console.log('error');
-}
 
 exports.restWrapper = restWrapper;
