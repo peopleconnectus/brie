@@ -47,12 +47,12 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
                 };
                 self.resultObj = resultObj;
 
-                if(self.statusCode !== 200){
+                if(self.statusCode < 200 || self.statusCode >= 300){
                     self.logError();
                     self.onError();
                 }
 
-                if(self.statusCode === 200) self.onEnd();
+                if(self.statusCode >= 200 && self.statusCode < 300) self.onEnd();
 
             });
         });
