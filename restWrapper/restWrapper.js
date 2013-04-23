@@ -1,28 +1,35 @@
 var http = require('http');
-var mlUtil = require('mlUtil');
-var restWrapper = function(path,method,host,port){
+
+var restWrapper = function(path,method,jsonReq,host,port){
     var data = '',
-        self = this;
+        self = this,
+        jsonDataStr = jsonReq ? JSON.stringify(jsonReq) : '';
     this.options = {
         path : path,
         method : method ? method = method : method = "GET",
         host : host ? host = host : host = "api.qa09.sea1.cmates.com", //CONFIG.links.apiBaseHost,
         port : port ? port = port : port = 80
     };
+
+    //if json object is present in request overwrite header info
+
+    if(jsonReq)
+        this.options.headers = {'Content-Type': 'application/json','Content-Length': JSON.stringify(jsonReq).length};
+
     this.resultObj = {};
 
-    this.getAsync = function(data){
+    this.asyncReq = function(data){
         this.asyncCallback = data;
-        this.get();
+        this.req();
     };
 
-    this.getSocket = function(data){
+    this.socketReq = function(data){
         this.socket = data.socket;
-        this.socketEmitName = data.socketEmitName;
-        this.get();
+        this.callbackName = data.callbackName;
+        this.req();
     };
 
-    this.get = function(asyncCallback,socket){
+    this.req = function(){
         var req = http.get(self.options, function(res) {
             res.setEncoding('utf8');
             self.statusCode = res.statusCode;
@@ -30,33 +37,40 @@ var restWrapper = function(path,method,host,port){
                 data += chunk;
             });
             res.on('end', function() {
-                if(self.statusCode === 200 || self.statusCode === 400){
-                    self.resultObj = JSON.parse(data);
-                }else{
-                    self.resultObj = {"errorCode" : self.statusCode};
-                }
-                self.onEnd();
+                var resultObj;
+                try {
+                    resultObj = JSON.parse(data);
+                } catch(e){
+                    resultObj = {'errorCode' : self.statusCode};
+                };
+                self.resultObj = resultObj;
+
+                if(self.statusCode !== 200) self.logError();
+
+                if(self.statusCode === 200) self.onEnd();
             });
         });
-        req.on('error',function(){
-            self.onError();
-        });
+
+        if(jsonReq) req.write(jsonDataStr);
+
         req.end();
+    };
+
+    this.logError = function(){
+        var msg = "Reponse " + JSON.stringify(this.resultObj) + '\n';
+            msg += 'Error occurred in restWrapper.js\n ';
+            msg += 'Request params ' + JSON.stringify(this.options);
+        console.log('error',msg);
     };
 };
 
 restWrapper.prototype.onEnd = function(){
-    if(this.asyncCallback){
+    if(this.asyncCallback)
         this.asyncCallback(null,this.resultObj);
-    }else if(this.socket){
-        this.socket.emit(this.resultObj,this.socketEmitName);
-    }else{
+    else if(this.socket)
+        this.socket.emit(this.resultObj,this.callbackName);
+    else
         return this.resultObj;
-    }
 };
-
-restWrapper.prototype.onError = function(){
-    console.log('error');
-}
 
 exports.restWrapper = restWrapper;
