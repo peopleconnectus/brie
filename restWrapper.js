@@ -1,6 +1,6 @@
 var http = require('http');
 
-var restWrapper = function(path,method,jsonReq,host,port){
+var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
     var data = '',
         self = this,
         jsonDataStr = jsonReq ? JSON.stringify(jsonReq) : '';
@@ -10,6 +10,8 @@ var restWrapper = function(path,method,jsonReq,host,port){
         host : host ? host = host : host = "api.qa09.sea1.cmates.com", //CONFIG.links.apiBaseHost,
         port : port ? port = port : port = 80
     };
+
+    if(reqHeader) this.options.headers = reqHeader;
 
     //if json object is present in request overwrite header info
 
@@ -23,12 +25,11 @@ var restWrapper = function(path,method,jsonReq,host,port){
         this.req();
     };
 
-    this.socketReq = function(data){
-        this.socket = data.socket;
-        this.callbackName = data.callbackName;
+    this.socketReq = function(socket,callbackName){
+        this.socket = socket;
+        this.callbackName = callbackName;
         this.req();
     };
-
     this.req = function(){
         var req = http.get(self.options, function(res) {
             res.setEncoding('utf8');
