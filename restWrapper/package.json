@@ -1,0 +1,5 @@
+{
+  "name": "restWrapper",
+  "main": "./restWrapper",
+  "version": "0.0.1"
+}

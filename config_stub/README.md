@@ -1,0 +1,2 @@
+config_stub README
+==================
