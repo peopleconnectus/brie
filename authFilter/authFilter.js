@@ -273,7 +273,7 @@ var authFilter = function(hs){
 
     this.getUserPermissions = function(outerCallback){
         if(scribeObj.registrationId)
-            require('../rest/userPermissions').get(scribeObj.registrationId,outerCallback);
+            require('../../rest/userPermissions').get(scribeObj.registrationId,outerCallback);
         else
             outerCallback(null,{"records":[]});
     };
