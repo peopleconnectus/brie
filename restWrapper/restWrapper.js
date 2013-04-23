@@ -30,6 +30,7 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
         this.callbackName = callbackName;
         this.req();
     };
+
     this.req = function(){
         var req = http.get(self.options, function(res) {
             res.setEncoding('utf8');
@@ -46,9 +47,13 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
                 };
                 self.resultObj = resultObj;
 
-                if(self.statusCode !== 200) self.logError();
+                if(self.statusCode !== 200){
+                    self.logError();
+                    self.onError();
+                }
 
                 if(self.statusCode === 200) self.onEnd();
+
             });
         });
 
@@ -69,9 +74,15 @@ restWrapper.prototype.onEnd = function(){
     if(this.asyncCallback)
         this.asyncCallback(null,this.resultObj);
     else if(this.socket)
-        this.socket.emit(this.resultObj,this.callbackName);
+        this.socket.emit(this.callbackName,this.resultObj);
     else
         return this.resultObj;
+};
+
+restWrapper.prototype.onError = function(){
+    if(this.socket){
+        this.socket.emit(this.callbackName,this.resultObj);
+    }
 };
 
 exports.restWrapper = restWrapper;
