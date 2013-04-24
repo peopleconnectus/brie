@@ -45,6 +45,7 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
                 } catch(e){
                     resultObj = {'errorCode' : self.statusCode};
                 };
+                console.log(self.options,resultObj,self.statusCode)
                 self.resultObj = resultObj;
                 if(self.statusCode < 200 || self.statusCode >= 300){
                     self.logError();

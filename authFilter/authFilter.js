@@ -25,7 +25,7 @@ var authFilter = function(hs){
     hs.cookieObj = hs.headers.cookie ? cookie.parse(hs.headers.cookie) : '';
 
     this.authInitHttp = function(outerCallback){
-        async.waterfall([
+        async.series([
             function(callback){
                 self.salesFilter(callback);
             },
@@ -44,12 +44,11 @@ var authFilter = function(hs){
 
         ],
             function(err, results) {
-//                console.log('session cookie',sessionCookie);
-//                console.log('ident Cookie',ident);
-//                console.log('mlVisitor Cookie',mlVisitor);
-//                console.log('scribe object',scribeObj);
-//                console.log('outgoing cookies',respCookies);
-
+                /*console.log('session cookie',sessionCookie);
+                console.log('ident Cookie',ident);
+                console.log('mlVisitor Cookie',mlVisitor);
+                console.log('scribe object',scribeObj);
+                console.log('outgoing cookies',respCookies);*/
                 outerCallback(err,handOff);
             });
     };
@@ -90,7 +89,7 @@ var authFilter = function(hs){
     };
 
     this.scribeFilterIn = function(callback){
-        async.waterfall([
+        async.series([
             function(callback){
                 checkSessionCookie(callback);
             },
@@ -122,8 +121,8 @@ var authFilter = function(hs){
 
     this.scribeFilterOut = function(callback){
         if(scribeObj.version ==1){
-            var setScribe = restWrapper.restWrapper('/sessions/scribe','POST',scribeObj);
-            setScribe = asyncReq(callback);
+            var setScribe = new restWrapper.restWrapper('/sessions/scribe','POST',scribeObj);
+            setScribe.asyncReq(callback);
         }else{
             callback(null);
         }
@@ -144,7 +143,6 @@ var authFilter = function(hs){
         reqCookies.ident = false;
         if(reqCookies.ident){
             ident = reqCookies.ident.split('&')[1];
-            callback(null);
         }else{
             var reqHeader ={
                 "salesProgramId" : salesProgramId,
@@ -218,32 +216,37 @@ var authFilter = function(hs){
 
     //Lookup sessions DB using sessionId from cookie
     var lookupSession = function(callback){
-        var req = http.get(mlUtil.RESTOptions('/sessions/scribe/'+sessionCookie), function(res) {
-            res.setEncoding('utf8');
-            var data = '';
-            res.on('data', function (chunk) {
-                data += chunk;
-            });
-            res.on('end', function(){
-                scribeObj = JSON.parse(data);
-                callback();
-            });
+
+        async.waterfall([
+            function(scribeCallback){
+                var lkupScribeObj = new restWrapper.restWrapper('/sessions/scribe/'+sessionCookie);
+                lkupScribeObj.asyncReq(scribeCallback);
+            },
+            function(lkupScribeResult,scribeCallback){
+                scribeObj = lkupScribeResult;
+                scribeCallback();
+            }
+        ],
+        function(){
+            callback();
         });
     };
 
     var checkScribeObj = function(callback){
         if(scribeObj.errorCode == '404' || scribeObj.errorCode == '400'){
-            var req = http.get(mlUtil.RESTOptions('/sessions/scribe','POST'), function(res){
-                res.setEncoding('utf8');
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
+            async.waterfall([
+                function(newScribeCallback){
+                    var getScribeObj = new restWrapper.restWrapper('/sessions/scribe','POST');
+                    getScribeObj.asyncReq(newScribeCallback);
+                },
+                function(newScribeObj,newScribeCallback){
+                    scribeObj = newScribeObj;
+                    newScribeCallback();
+                }
+            ],
+                function(){
+                    callback();
                 });
-                res.on('end', function(){
-                    scribeObj= JSON.parse(data);
-                    callback(null);
-                });
-            });
         }else{
             callback();
         }
