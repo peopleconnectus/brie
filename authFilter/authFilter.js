@@ -180,13 +180,13 @@ var authFilter = function(hs){
 
     //Is "ML_VISITOR'cookie present?  If none supplied set a new one based on prev set "ident" property and a timestamp.
     var checkMlVisitorCookie = function(callback){
-        if(reqCookies.ML_VISITOR){
+        if(reqCookies.ML_VISITOR)
             mlVisitor = reqCookies.ML_VISITOR;
-        }else{
-            var now = new Date();
+        else
             mlVisitor = ident + dateFormat("yyyymmddHHMMss");
-            respCookies.mlVisitor = "ML_VISITOR=" + mlVisitor + "; expires="+dateFormat(new Date(now.setYear(now.getFullYear() + 10)),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+'; path=/; domain=.qa09.sea1.cmates.com;';
-        }
+
+        var now = new Date();
+        respCookies.mlVisitor = "ML_VISITOR=" + mlVisitor + "; expires="+dateFormat(new Date(now.setYear(now.getFullYear() + 10)),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+'; path=/; domain=.qa09.sea1.cmates.com;';
         callback();
     };
     //Was a new global Id generated in this execution?
