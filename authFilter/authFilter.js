@@ -3,6 +3,7 @@ var cookie = require('cookie');
 var async = require('async');
 var mlUtil = require('mlUtil');
 var dateFormat = require('dateformat/lib/dateformat.js');
+var restWrapper = require('restWrapper');
 
 var authFilter = function(hs){
 
@@ -272,10 +273,13 @@ var authFilter = function(hs){
     //get User Permissions
 
     this.getUserPermissions = function(outerCallback){
-        if(scribeObj.registrationId)
-            require('../../rest/userPermissions').get(scribeObj.registrationId,outerCallback);
-        else
+        if(scribeObj.registrationId){
+            var permissionReq = new restWrapper.restWrapper('/people/'+scribeObj.registrationId+'/permissions');
+            permissionReq.asyncReq(outerCallback);
+        }
+        else{
             outerCallback(null,{"records":[]});
+        }
     };
 };
 
