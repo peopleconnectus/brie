@@ -109,7 +109,6 @@ var authFilter = function(hs){
 
     this.canvasAutoLoginFilter = function(callback){
         var err;
-        handOff.redirect = false;
         if(!scribeObj.authenticated){
             if(scribeObj.autoLogin){
                 //the below logic needs to be clarified
