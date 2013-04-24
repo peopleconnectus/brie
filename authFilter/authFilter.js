@@ -122,19 +122,8 @@ var authFilter = function(hs){
 
     this.scribeFilterOut = function(callback){
         if(scribeObj.version ==1){
-            var scribeStr = JSON.stringify(scribeObj);
-            var req = http.request(mlUtil.RESTOptions('/sessions/scribe','POST',{'Content-Type': 'application/json','Content-Length': scribeStr.length}),function(res){
-                var responseString = '';
-                res.setEncoding('utf-8');
-                res.on('data', function(data) {
-                    responseString += data;
-                });
-                res.on('end', function() {
-                    callback(null,scribeObj);
-                });
-            });
-            req.write(scribeStr);
-            req.end();
+            var setScribe = restWrapper.restWrapper('/sessions/scribe','POST',scribeObj);
+            setScribe = asyncReq(callback);
         }else{
             callback(null);
         }
