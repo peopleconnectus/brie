@@ -17,7 +17,7 @@ var authFilter = function(hs){
         mlVisitor,
         sessionCookie,
         xSessionId,
-        salesProgramId = 0,
+        salesProgramId = 11,
         errMsg,
         handOff = {},
         scribeObj;
@@ -63,7 +63,7 @@ var authFilter = function(hs){
 
     this.globalIdFilter = function(callback){
 
-        async.waterfall([
+        async.series([
             function(callback){
                 checkIdentCookie(callback);
             },
@@ -153,6 +153,7 @@ var authFilter = function(hs){
      * Then extract the GUID part of the cookie content and set it as a request attribute.
      */
     var checkIdentCookie = function(callback){
+        reqCookies.ident = false;
         if(reqCookies.ident){
             ident = reqCookies.ident.split('&')[1];
             callback(null);
@@ -165,28 +166,26 @@ var authFilter = function(hs){
                 "requestUrl" : hs.headers.referer,
                 "referer" : hs.headers.referer
             };
-
-            var reqHeaderStr = JSON.stringify(reqHeader);
-            var req = http.get(mlUtil.RESTOptions('/sessions/sessionid?logSessionStart=true','POST',{'Content-Type': 'application/json','Content-Length': reqHeaderStr.length}), function(res) {
-                res.setEncoding('utf8');
-                var data = '';
-                res.on('data', function (chunk) {
-                    data += chunk;
-                });
-                res.on('end', function(){
-                    var obj = JSON.parse(data);
-                    ident = obj.id;
+            async.waterfall([
+                function(scribeCallback){
+                    var newScribeObj = new restWrapper.restWrapper('/sessions/sessionid?logSessionStart=true','POST',reqHeader);
+                    newScribeObj.asyncReq(scribeCallback);
+                },
+                function(respObj,scribeCallback){
+                    ident = respObj.id;
                     newGlobalId = true;
-                    callback();
-                })
+                    scribeCallback();
+                }
+            ],
+            function(){
+                callback();
             });
-            req.write(reqHeaderStr);
-            req.end();
         }
     };
 
     //Reset expiry on the cookie to 30 min from now, and add it to the HTTP Response
     var setIdentCookie = function(callback){
+
         var now = new Date();
         var newUTC = now.setMinutes(now.getMinutes() + 30);
         respCookies.ident = "ident=" + newUTC + "&" + ident + "; expires="+dateFormat(new Date(newUTC),"UTC:ddd, dd-mmm-yyyy HH:MM:ss 'GMT'")+'; path=/; domain=.qa09.sea1.cmates.com;';

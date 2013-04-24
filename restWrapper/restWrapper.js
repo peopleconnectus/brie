@@ -46,14 +46,11 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
                     resultObj = {'errorCode' : self.statusCode};
                 };
                 self.resultObj = resultObj;
-
                 if(self.statusCode < 200 || self.statusCode >= 300){
                     self.logError();
                     self.onError();
                 }
-
                 if(self.statusCode >= 200 && self.statusCode < 300) self.onEnd();
-
             });
         });
 
@@ -71,18 +68,20 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
 };
 
 restWrapper.prototype.onEnd = function(){
-    if(this.asyncCallback)
+    if(this.asyncCallback){
         this.asyncCallback(null,this.resultObj);
-    else if(this.socket)
+    }else if(this.socket){
         this.socket.emit(this.callbackName,this.resultObj);
-    else
+    }else{
         return this.resultObj;
+    }
 };
 
 restWrapper.prototype.onError = function(){
     if(this.socket){
         this.socket.emit(this.callbackName,this.resultObj);
-    }
+    }else if(this.asyncCallback)
+        this.asyncCallback(null,this.resultObj);
 };
 
 exports.restWrapper = restWrapper;
