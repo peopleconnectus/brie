@@ -11,10 +11,6 @@ var Yaml = null,    // External libraries are lazy-loaded
     FileSystem = require('fs');
 
 // Static members
-console.log('========================== CONFIG_DIR');
-console.log("NODE_CONFIG_DIR: " + process.env['NODE_CONFIG_DIR']);
-console.log('CWD: ' + process.cwd());
-console.log('====================== END CONFIG_DIR');
 var DEFAULT_CLONE_DEPTH = 6,
     FILE_WATCHER_INTERVAL = 2500, // For old style (pre-6.0) file watching
     DIR = 'NODE_CONFIG_DIR',
@@ -26,6 +22,11 @@ var DEFAULT_CLONE_DEPTH = 6,
     runtimeJsonWatcher = null,   // Filesystem watcher for runtime.json
     isQueuedForPersistence = false;
 
+console.log('========================== CONFIG_DIR');
+console.log("NODE_CONFIG_DIR: " + process.env['NODE_CONFIG_DIR']);
+console.log('CWD: ' + process.cwd());
+console.log('runtimeJSFile: ' + runtimeJsonFilename);
+console.log('====================== END CONFIG_DIR');
 /**
  * <p>Runtime Application Configurations</p>
  *
