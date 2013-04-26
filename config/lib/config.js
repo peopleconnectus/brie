@@ -14,7 +14,7 @@ var Yaml = null,    // External libraries are lazy-loaded
 var DEFAULT_CLONE_DEPTH = 6,
     FILE_WATCHER_INTERVAL = 2500, // For old style (pre-6.0) file watching
     DIR = 'NODE_CONFIG_DIR',
-    CONFIG_DIR = process.env[DIR] || process.cwd() + '/config',
+    CONFIG_DIR = process.env[DIR] || (process.cwd()==="/"?"":process.cwd()) + '/config',
     RUNTIME = 'NODE_CONFIG_RUNTIME_JSON',
     runtimeJsonFilename = process.env[RUNTIME] || (CONFIG_DIR === "/"?"":CONFIG_DIR) + '/runtime.json',
     originalConfig = null,       // Not including the runtime.json values
