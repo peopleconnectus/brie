@@ -1,49 +1,49 @@
 /*jsl:declare global */
-// config.js (c) 2010-2013 Loren West and other contributors
+// config_moved.js (c) 2010-2013 Loren West and other contributors
 // May be freely distributed under the MIT license.
 // For further details and documentation:
-// http://lorenwest.github.com/node-config
+// http://lorenwest.github.com/node-config_moved
 
 // Dependencies
 var Yaml = null,    // External libraries are lazy-loaded
-    VisionmediaYaml = null,  // only if these file types exist.
-    Coffee = null,
-    FileSystem = require('fs');
+	VisionmediaYaml = null,  // only if these file types exist.
+	Coffee = null,
+	FileSystem = require('fs');
 
 // Static members
 var DEFAULT_CLONE_DEPTH = 6,
-    FILE_WATCHER_INTERVAL = 2500, // For old style (pre-6.0) file watching
-    DIR = 'NODE_CONFIG_DIR',
-    CONFIG_DIR = process.env[DIR] || (process.cwd()==="/"?".":process.cwd()) + '/config',
-    RUNTIME = 'NODE_CONFIG_RUNTIME_JSON',
-    runtimeJsonFilename = './runtime.json', //process.env[RUNTIME] || (CONFIG_DIR === "/"?"":CONFIG_DIR) + '/runtime.json',
-    originalConfig = null,       // Not including the runtime.json values
-    runtimeJson = {},            // Current runtimeJson extensions
-    runtimeJsonWatcher = null,   // Filesystem watcher for runtime.json
-    isQueuedForPersistence = false;
+	FILE_WATCHER_INTERVAL = 2500, // For old style (pre-6.0) file watching
+	DIR = 'NODE_CONFIG_DIR',
+	CONFIG_DIR = process.env[DIR] || process.cwd() + '/config_moved',
+	RUNTIME = 'NODE_CONFIG_RUNTIME_JSON',
+	runtimeJsonFilename = './runtime.json', //process.env[RUNTIME] || CONFIG_DIR + '/runtime.json', // shortcut this file location because QA09 was breaking.
+	originalConfig = null,       // Not including the runtime.json values
+	runtimeJson = {},            // Current runtimeJson extensions
+	runtimeJsonWatcher = null,   // Filesystem watcher for runtime.json
+	isQueuedForPersistence = false;
 
-console.log('========================== CONFIG_DIR');
-console.log("NODE_CONFIG_DIR: " + process.env['NODE_CONFIG_DIR']);
-console.log('CONFIG_DIR: ' + CONFIG_DIR);
-console.log('runtimeJSFile: ' + runtimeJsonFilename);
-console.log('====================== END CONFIG_DIR');
+//console.log('========================== CONFIG_DIR');
+//console.log("NODE_CONFIG_DIR: " + process.env['NODE_CONFIG_DIR']);
+//console.log('CONFIG_DIR: ' + CONFIG_DIR);
+//console.log('runtimeJSFile: ' + runtimeJsonFilename);
+//console.log('====================== END CONFIG_DIR');
 /**
  * <p>Runtime Application Configurations</p>
  *
  * <p>
- * The config module exports a singleton object representing all runtime
+ * The config_moved module exports a singleton object representing all runtime
  * configurations for this application deployment.
  * </p>
  *
  * <p>
- * Application configurations are stored in files within the config directory
+ * Application configurations are stored in files within the config_moved directory
  * of your application.  The default configuration file is loaded, followed
  * by files specific to the deployment type (development, testing, staging,
  * production, etc.).
  * </p>
  *
  * <p>
- * For example, with the following config/default.yaml file:
+ * For example, with the following config_moved/default.yaml file:
  * </p>
  *
  * <pre>
@@ -61,14 +61,14 @@ console.log('====================== END CONFIG_DIR');
  * <p>
  *
  * <pre>
- *   var CONFIG = require('config').customer;
+ *   var CONFIG = require('config_moved').customer;
  *   ...
  *   newCustomer.creditLimit = CONFIG.initialCredit;
  *   database.open(CONFIG.db.name, CONFIG.db.port);
  *   ...
  * </pre>
  *
- * @module config
+ * @module config_moved
  * @class Config
  */
 
@@ -77,7 +77,7 @@ console.log('====================== END CONFIG_DIR');
  *
  * <p>
  * The configuration object is a shared singleton object within the applicaiton,
- * attained by calling require('config').
+ * attained by calling require('config_moved').
  * </p>
  *
  * <p>
@@ -85,7 +85,7 @@ console.log('====================== END CONFIG_DIR');
  * for file/module scope. If you want the root of the object, you can do this:
  * </p>
  * <pre>
- * var CONFIG = require('config');
+ * var CONFIG = require('config_moved');
  * </pre>
  *
  * <p>
@@ -93,9 +93,9 @@ console.log('====================== END CONFIG_DIR');
  * object.  In that case you could do this at the top of your file:
  * </p>
  * <pre>
- * var CONFIG = require('config').customer;
+ * var CONFIG = require('config_moved').customer;
  * or
- * var CUSTOMER_CONFIG = require('config').customer;
+ * var CUSTOMER_CONFIG = require('config_moved').customer;
  * </pre>
  *
  * <script type="text/javascript">
@@ -106,9 +106,9 @@ console.log('====================== END CONFIG_DIR');
  * @return CONFIG {object} - The top level configuration object
  */
 var Config = function() {
-  var t = this;
-  t._loadFileConfigs();
-  t._persistConfigsOnChange();
+	var t = this;
+	t._loadFileConfigs();
+	t._persistConfigsOnChange();
 };
 
 /**
@@ -116,7 +116,7 @@ var Config = function() {
  *
  * <p>
  * Configuration values can be changed at runtime by the application or by a
- * manual change to the config/runtime.json  file.
+ * manual change to the config_moved/runtime.json  file.
  * This method lets you specify a function to run when a configuration
  * value changes.
  * </p>
@@ -128,7 +128,7 @@ var Config = function() {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config').customer;
+ *   var CONFIG = require('config_moved').customer;
  *   ...
  *
  *   // Watch for any changes to the customer configuration
@@ -149,106 +149,106 @@ var Config = function() {
  */
 Config.prototype.watch = function(object, property, handler, depth) {
 
-  // Initialize
-  var t = this, o = object;
-  var allProperties = property ? [property] : Object.keys(o);
+	// Initialize
+	var t = this, o = object;
+	var allProperties = property ? [property] : Object.keys(o);
 
-  // Depth detection
-  depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
-  if (depth < 0) {
-    return;
-  }
+	// Depth detection
+	depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
+	if (depth < 0) {
+		return;
+	}
 
-  // Create hidden properties on the object
-  if (!o.__watchers)
-    t.makeHidden(o, '__watchers', {});
-  if (!o.__propertyValues)
-    t.makeHidden(o, '__propertyValues', {});
+	// Create hidden properties on the object
+	if (!o.__watchers)
+		t.makeHidden(o, '__watchers', {});
+	if (!o.__propertyValues)
+		t.makeHidden(o, '__propertyValues', {});
 
-  // Attach watchers to all requested properties
-  allProperties.forEach(function(prop){
+	// Attach watchers to all requested properties
+	allProperties.forEach(function(prop){
 
-    // Setup the property for watching (first time only)
-    if (typeof(o.__propertyValues[prop]) == 'undefined') {
+		// Setup the property for watching (first time only)
+		if (typeof(o.__propertyValues[prop]) == 'undefined') {
 
-      // Don't error re-defining the property if immutable
-      var descriptor = Object.getOwnPropertyDescriptor(o, prop);
-      if (descriptor && descriptor.writable === false)
-        return;
+			// Don't error re-defining the property if immutable
+			var descriptor = Object.getOwnPropertyDescriptor(o, prop);
+			if (descriptor && descriptor.writable === false)
+				return;
 
-      // Copy the value to the hidden field, and add the property to watchers
-      o.__propertyValues[prop] = [o[prop]];
-      o.__watchers[prop] = [];
+			// Copy the value to the hidden field, and add the property to watchers
+			o.__propertyValues[prop] = [o[prop]];
+			o.__watchers[prop] = [];
 
-      // Attach the property watcher
-      Object.defineProperty(o, prop, {
-        enumerable : true,
+			// Attach the property watcher
+			Object.defineProperty(o, prop, {
+				enumerable : true,
 
-        get : function(){
-          // If more than 1 item is in the values array,
-          // then we're currently processing watchers.
-          if (o.__propertyValues[prop].length == 1)
-            // Current value
-            return o.__propertyValues[prop][0];
-          else
-            // [0] is prior value, [1] is new value being processed
-            return o.__propertyValues[prop][1];
-        },
+				get : function(){
+					// If more than 1 item is in the values array,
+					// then we're currently processing watchers.
+					if (o.__propertyValues[prop].length == 1)
+					// Current value
+						return o.__propertyValues[prop][0];
+					else
+					// [0] is prior value, [1] is new value being processed
+						return o.__propertyValues[prop][1];
+				},
 
-        set : function(newValue) {
+				set : function(newValue) {
 
-          // Return early if no change
-          var origValue = o[prop];
-          if (origValue === newValue)
-            return;
+					// Return early if no change
+					var origValue = o[prop];
+					if (origValue === newValue)
+						return;
 
-          // Remember the new value, and return if we're in another setter
-          o.__propertyValues[prop].push(newValue);
-          if (o.__propertyValues[prop].length > 2)
-            return;
+					// Remember the new value, and return if we're in another setter
+					o.__propertyValues[prop].push(newValue);
+					if (o.__propertyValues[prop].length > 2)
+						return;
 
-          // Call all watchers for each change requested
-          var numIterations = 0;
-          while (o.__propertyValues[prop].length > 1) {
+					// Call all watchers for each change requested
+					var numIterations = 0;
+					while (o.__propertyValues[prop].length > 1) {
 
-            // Detect recursion
-            if (++numIterations > 20) {
-              o.__propertyValues[prop] = [origValue];
-              throw new Error('Recursion detected while setting [' + prop + ']');
-            }
+						// Detect recursion
+						if (++numIterations > 20) {
+							o.__propertyValues[prop] = [origValue];
+							throw new Error('Recursion detected while setting [' + prop + ']');
+						}
 
-            // Call each watcher for the current values
-            var oldValue = o.__propertyValues[prop][0];
-            newValue = o.__propertyValues[prop][1];
-            o.__watchers[prop].forEach(function(watcher) {
-              try {
-                watcher(o, prop, oldValue, newValue);
-              } catch (e) {
-                // Log an error and continue with subsequent watchers
-                console.error("Exception in watcher for " + prop);
-              }
-            });
+						// Call each watcher for the current values
+						var oldValue = o.__propertyValues[prop][0];
+						newValue = o.__propertyValues[prop][1];
+						o.__watchers[prop].forEach(function(watcher) {
+							try {
+								watcher(o, prop, oldValue, newValue);
+							} catch (e) {
+								// Log an error and continue with subsequent watchers
+								console.error("Exception in watcher for " + prop);
+							}
+						});
 
-            // Done processing this value
-            o.__propertyValues[prop].splice(0,1);
-          }
-        }
-      });
+						// Done processing this value
+						o.__propertyValues[prop].splice(0,1);
+					}
+				}
+			});
 
-    } // Done setting up the property for watching (first time)
+		} // Done setting up the property for watching (first time)
 
-    // Add the watcher to the property
-    o.__watchers[prop].push(handler);
+		// Add the watcher to the property
+		o.__watchers[prop].push(handler);
 
-    // Recurs if this is an object...
-    if (o[prop] && typeof(o[prop]) == 'object') {
-      Config.prototype.watch(o[prop], null, handler, depth - 1);
-    }
+		// Recurs if this is an object...
+		if (o[prop] && typeof(o[prop]) == 'object') {
+			Config.prototype.watch(o[prop], null, handler, depth - 1);
+		}
 
-  }); // Done processing each property
+	}); // Done processing each property
 
-  // Return the original object - for chaining
-  return o;
+	// Return the original object - for chaining
+	return o;
 };
 
 /**
@@ -264,13 +264,13 @@ Config.prototype.watch = function(object, property, handler, depth) {
  *
  * <p>Using the function within your module:</p>
  * <pre>
- *   var CONFIG = require("config");
+ *   var CONFIG = require("config_moved");
  *   CONFIG.setModuleDefaults("MyModule", {
  *   &nbsp;&nbsp;templateName: "t-50",
  *   &nbsp;&nbsp;colorScheme: "green"
  *   });
  * <br>
- *   // Template name may be overridden by application config files
+ *   // Template name may be overridden by application config_moved files
  *   console.log("Template: " + CONFIG.MyModule.templateName);
  * </pre>
  *
@@ -286,32 +286,32 @@ Config.prototype.watch = function(object, property, handler, depth) {
  */
 Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
 
-  // Copy the properties into a new object
-  var t = this;
-  var moduleConfig = t._extendDeep({}, defaultProperties);
+	// Copy the properties into a new object
+	var t = this;
+	var moduleConfig = t._extendDeep({}, defaultProperties);
 
-  // Attach handlers & watchers onto the module config object
-  t._attachProtoDeep(moduleConfig);
-  t._persistConfigsOnChange(moduleConfig);
+	// Attach handlers & watchers onto the module config_moved object
+	t._attachProtoDeep(moduleConfig);
+	t._persistConfigsOnChange(moduleConfig);
 
-  // Extend the module config object with values from originalConfig
-  if (originalConfig[moduleName]) {
-    t._extendDeep(moduleConfig, originalConfig[moduleName]);
-  }
+	// Extend the module config_moved object with values from originalConfig
+	if (originalConfig[moduleName]) {
+		t._extendDeep(moduleConfig, originalConfig[moduleName]);
+	}
 
-  // Save the mixed module config as the original
-  originalConfig[moduleName] = t._cloneDeep(moduleConfig);
+	// Save the mixed module config_moved as the original
+	originalConfig[moduleName] = t._cloneDeep(moduleConfig);
 
-  // Extend the module config object with values from runtimeJson
-  if (runtimeJson[moduleName]) {
-    t._extendDeep(moduleConfig, runtimeJson[moduleName]);
-  }
+	// Extend the module config_moved object with values from runtimeJson
+	if (runtimeJson[moduleName]) {
+		t._extendDeep(moduleConfig, runtimeJson[moduleName]);
+	}
 
-  // Attach the object onto the CONFIG object
-  t[moduleName] = moduleConfig;
+	// Attach the object onto the CONFIG object
+	t[moduleName] = moduleConfig;
 
-  // Return the module config
-  return moduleConfig;
+	// Return the module config_moved
+	return moduleConfig;
 };
 
 /**
@@ -335,7 +335,7 @@ Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config');
+ *   var CONFIG = require('config_moved');
  *   ...
  *
  *   // Hide the Amazon S3 credentials
@@ -351,16 +351,16 @@ Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
  */
 Config.prototype.makeHidden = function(object, property, value) {
 
-  // Use the existing value if the new value isn't specified
-  value = (typeof value == 'undefined') ? object[property] : value;
+	// Use the existing value if the new value isn't specified
+	value = (typeof value == 'undefined') ? object[property] : value;
 
-  // Create the hidden property
-  Object.defineProperty(object, property, {
-    value: value,
-    enumerable : false
-  });
+	// Create the hidden property
+	Object.defineProperty(object, property, {
+		value: value,
+		enumerable : false
+	});
 
-  return object;
+	return object;
 }
 
 /**
@@ -378,7 +378,7 @@ Config.prototype.makeHidden = function(object, property, value) {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config').customer;
+ *   var CONFIG = require('config_moved').customer;
  *   ...
  *
  *   // Obtain a DB connection using CONFIG parameters
@@ -398,25 +398,25 @@ Config.prototype.makeHidden = function(object, property, value) {
  */
 Config.prototype.makeImmutable = function(object, property, value) {
 
-  // Use the existing value if a new value isn't specified
-  value = (typeof value == 'undefined') ? object[property] : value;
+	// Use the existing value if a new value isn't specified
+	value = (typeof value == 'undefined') ? object[property] : value;
 
-  // Disable writing, and make sure the property cannot be re-configured.
-  Object.defineProperty(object, property, {
-    value : value,
-    writable : false,
-    configurable: false
-  });
+	// Disable writing, and make sure the property cannot be re-configured.
+	Object.defineProperty(object, property, {
+		value : value,
+		writable : false,
+		configurable: false
+	});
 
-  return object;
+	return object;
 };
 
 /**
  * Change the runtime.json file watching polling interval.
  *
  * <p>
- * Node-config automatically monitors and apply changes made to the
- * config/runtime.json file.  This paradigm allows for manual changes to running
+ * Node-config_moved automatically monitors and apply changes made to the
+ * config_moved/runtime.json file.  This paradigm allows for manual changes to running
  * application servers, and for multi-node application servers to keep in sync.
  * </p>
  *
@@ -431,62 +431,62 @@ Config.prototype.makeImmutable = function(object, property, value) {
  */
 Config.prototype.watchForConfigFileChanges = function(interval) {
 
-  // Turn off any prior watching
-  var t = this, watchInterval = (typeof interval === 'undefined' ? FILE_WATCHER_INTERVAL : interval);
-  if (FileSystem.watch) {
-    if (runtimeJsonWatcher) {
-      runtimeJsonWatcher.close();
-      runtimeJsonWatcher = null;
-    }
-  } else {
-    FileSystem.unwatchFile(runtimeJsonFilename);
-  }
+	// Turn off any prior watching
+	var t = this, watchInterval = (typeof interval === 'undefined' ? FILE_WATCHER_INTERVAL : interval);
+	if (FileSystem.watch) {
+		if (runtimeJsonWatcher) {
+			runtimeJsonWatcher.close();
+			runtimeJsonWatcher = null;
+		}
+	} else {
+		FileSystem.unwatchFile(runtimeJsonFilename);
+	}
 
-  // If interval is zero, don't attach a new watcher
-  if (interval === 0) {return;}
+	// If interval is zero, don't attach a new watcher
+	if (interval === 0) {return;}
 
-  // Re-merge the runtime JSON file if we notice a change
-  var onFileChange = function(retry) {
-    FileSystem.readFile(runtimeJsonFilename, 'UTF-8', function(err, fileContent) {
+	// Re-merge the runtime JSON file if we notice a change
+	var onFileChange = function(retry) {
+		FileSystem.readFile(runtimeJsonFilename, 'UTF-8', function(err, fileContent) {
 
-      // Not much to do on error
-      if (err) {
-        console.error("Error loading " + runtimeJsonFilename);
-        return;
-      }
+			// Not much to do on error
+			if (err) {
+				console.error("Error loading " + runtimeJsonFilename);
+				return;
+			}
 
-      // Parse the file and mix it in to this config object.
-      // This notifies listeners
-      try {
-        var configObject = JSON.parse(t._stripComments(fileContent));
-        t._extendDeep(t, configObject);
-      } catch (e) {
-        console.error("Error parsing " + runtimeJsonFilename, e);
-        // Retry once - could be someone else writing
-        if (!retry) {
-          setTimeout(function(){
-            onFileChange(true);
-          }, 1000);
-        }
-        return;
-      }
-    });
-  };
+			// Parse the file and mix it in to this config_moved object.
+			// This notifies listeners
+			try {
+				var configObject = JSON.parse(t._stripComments(fileContent));
+				t._extendDeep(t, configObject);
+			} catch (e) {
+				console.error("Error parsing " + runtimeJsonFilename, e);
+				// Retry once - could be someone else writing
+				if (!retry) {
+					setTimeout(function(){
+						onFileChange(true);
+					}, 1000);
+				}
+				return;
+			}
+		});
+	};
 
-  // Use the latest version of file watching
-  if (FileSystem.watch) {
-    // This is the latest
-    runtimeJsonWatcher = FileSystem.watch(runtimeJsonFilename, {persistent:false}, function(event, filename) {
-      onFileChange();
-    });
-  }
-  else {
-    // Old style polling - only choice if running pre-6.0
-    FileSystem.watchFile(runtimeJsonFilename, {persistent:false, interval:watchInterval}, function(curr, prev) {
-      if (curr.mtime.getTime() === prev.mtime.getTime()) {return;}
-      onFileChange();
-    });
-  }
+	// Use the latest version of file watching
+	if (FileSystem.watch) {
+		// This is the latest
+		runtimeJsonWatcher = FileSystem.watch(runtimeJsonFilename, {persistent:false}, function(event, filename) {
+			onFileChange();
+		});
+	}
+	else {
+		// Old style polling - only choice if running pre-6.0
+		FileSystem.watchFile(runtimeJsonFilename, {persistent:false, interval:watchInterval}, function(curr, prev) {
+			if (curr.mtime.getTime() === prev.mtime.getTime()) {return;}
+			onFileChange();
+		});
+	}
 
 };
 
@@ -497,38 +497,38 @@ Config.prototype.watchForConfigFileChanges = function(interval) {
  * </p>
  *
  * @protected
- * @param object {object} - The config object to watch
+ * @param object {object} - The config_moved object to watch
  * @method _persistConfigsOnChange
  */
 Config.prototype._persistConfigsOnChange = function(objectToWatch) {
 
-  // Watch for configuration value changes
-  var t = this;
-  objectToWatch = objectToWatch || t;
-  t.watch(objectToWatch, null, function(){
+	// Watch for configuration value changes
+	var t = this;
+	objectToWatch = objectToWatch || t;
+	t.watch(objectToWatch, null, function(){
 
-    // Return early if we're already queued up for persisting
-    if (isQueuedForPersistence)
-      return;
+		// Return early if we're already queued up for persisting
+		if (isQueuedForPersistence)
+			return;
 
-    // Defer persisting until the next tick.  This results in a single
-    // persist across any number of config changes in a single event cycle.
-    isQueuedForPersistence = true;
-    process.nextTick(function(){
+		// Defer persisting until the next tick.  This results in a single
+		// persist across any number of config_moved changes in a single event cycle.
+		isQueuedForPersistence = true;
+		process.nextTick(function(){
 
-      // Persist if necessary
-      var newDiffs = t._diffDeep(originalConfig, t);
-      if (!t._equalsDeep(newDiffs, runtimeJson)) {
-        FileSystem.writeFile(runtimeJsonFilename, JSON.stringify(newDiffs, null, 2), 'utf-8', function(error){
-          if (error)
-            console.error("Error writing " + runtimeJsonFilename, error);
-        });
-      }
+			// Persist if necessary
+			var newDiffs = t._diffDeep(originalConfig, t);
+			if (!t._equalsDeep(newDiffs, runtimeJson)) {
+				FileSystem.writeFile(runtimeJsonFilename, JSON.stringify(newDiffs, null, 2), 'utf-8', function(error){
+					if (error)
+						console.error("Error writing " + runtimeJsonFilename, error);
+				});
+			}
 
-      // Set up for next time
-      isQueuedForPersistence = false;
-    });
-  });
+			// Set up for next time
+			isQueuedForPersistence = false;
+		});
+	});
 };
 
 /**
@@ -553,7 +553,7 @@ Config.prototype._persistConfigsOnChange = function(objectToWatch) {
  * EXT can be yml, yaml, coffee, json, or js signifying the file type.
  * yaml (and yml) is in YAML format, coffee is a coffee-script,
  * json is in JSON format, and js is a javascript executable file that is
- * require()'d with module.exports being the config object.
+ * require()'d with module.exports being the config_moved object.
  * </p>
  *
  * <p>
@@ -577,102 +577,102 @@ Config.prototype._persistConfigsOnChange = function(objectToWatch) {
  */
 Config.prototype._loadFileConfigs = function() {
 
-  // Initialize
-  var t = this;
+	// Initialize
+	var t = this;
 
-  // Singleton
-  if (originalConfig)
-    return t;
+	// Singleton
+	if (originalConfig)
+		return t;
 
-  // Determine the host name from the OS module, $HOST, or $HOSTNAME
-  // Remove any . appendages, and default to null if not set
-  try {
-    var hostName = process.env.HOST || process.env.HOSTNAME;
+	// Determine the host name from the OS module, $HOST, or $HOSTNAME
+	// Remove any . appendages, and default to null if not set
+	try {
+		var hostName = process.env.HOST || process.env.HOSTNAME;
 
-    if (!hostName) {
-        var OS = require('os');
-        hostName = OS.hostname();
-    }
-  } catch (e) {
-    hostName = '';
-  }
-  hostName = hostName ? hostName.split('.')[0] : null;
+		if (!hostName) {
+			var OS = require('os');
+			hostName = OS.hostname();
+		}
+	} catch (e) {
+		hostName = '';
+	}
+	hostName = hostName ? hostName.split('.')[0] : null;
 
-  // Get the deployment type from NODE_ENV
-  var deployment = process.env.NODE_ENV || 'development';
+	// Get the deployment type from NODE_ENV
+	var deployment = process.env.NODE_ENV || 'development';
 
-  // Read each file in turn
-  var baseNames = ['default', hostName, deployment, hostName + '-' + deployment, 'local', 'local-' + deployment];
-  var extNames = ['js', 'json', 'coffee', 'yaml', 'yml'];
-  baseNames.forEach(function(baseName) {
-    extNames.forEach(function(extName) {
-      // Try merging the config object into this object
-      var fullFilename = CONFIG_DIR + '/' + baseName + '.' + extName;
-      var configObj = t._parseFile(fullFilename);
-      if (configObj) {
-        t._extendDeep(t, configObj);
-      }
-    });
-  });
+	// Read each file in turn
+	var baseNames = ['default', hostName, deployment, hostName + '-' + deployment, 'local', 'local-' + deployment];
+	var extNames = ['js', 'json', 'coffee', 'yaml', 'yml'];
+	baseNames.forEach(function(baseName) {
+		extNames.forEach(function(extName) {
+			// Try merging the config_moved object into this object
+			var fullFilename = CONFIG_DIR + '/' + baseName + '.' + extName;
+			var configObj = t._parseFile(fullFilename);
+			if (configObj) {
+				t._extendDeep(t, configObj);
+			}
+		});
+	});
 
-  // Remember the original configuration
-  originalConfig = t._cloneDeep(t);
+	// Remember the original configuration
+	originalConfig = t._cloneDeep(t);
 
-  // Extend the original config with any prior runtime.json diffs
-  runtimeJson = t._parseFile(runtimeJsonFilename) || {};
-  t._extendDeep(t, runtimeJson);
+	// Extend the original config_moved with any prior runtime.json diffs
+	runtimeJson = t._parseFile(runtimeJsonFilename) || {};
+	t._extendDeep(t, runtimeJson);
 
-  // Override configurations with environment variables
-  var envOverride = {};
-  for (var varName in process.env) {
-    if (varName.indexOf('CONFIG_') === 0) {
+	// Override configurations with environment variables
+	var envOverride = {};
+	for (var varName in process.env) {
+		if (varName.indexOf('CONFIG_') === 0) {
 
-      // Get the string or numeric value
-      var value = process.env[varName],
-          floatVal = parseFloat(value),
-          value = floatVal.toString() === value ? floatVal : value;
+			// Get the string or numeric value
+			var value = process.env[varName],
+				floatVal = parseFloat(value),
+				value = floatVal.toString() === value ? floatVal : value;
 
-      // Convert __ to ` (which you can't have in environment variables)
-      // After splitting, ` are converted to single underscores
-      varName = varName.replace(/__/g,'`');
-      var parts = varName.split('_');
-      parts.splice(0,1); // remove CONFIG
+			// Convert __ to ` (which you can't have in environment variables)
+			// After splitting, ` are converted to single underscores
+			varName = varName.replace(/__/g,'`');
+			var parts = varName.split('_');
+			parts.splice(0,1); // remove CONFIG
 
-      var curCtxt = envOverride;
-      for (var i = 0, l = parts.length; i < l; i++) {
-        var partName = parts[i].replace('`','_');
-        if (i == l - 1) {
-          // Final (element) part
-          curCtxt[partName] = value;
-        }
-        else {
-          // Mid (object) part
-          curCtxt[partName] = curCtxt[partName] || {};
-          curCtxt = curCtxt[partName];
-        }
-      }
-    }
-  }
-  t._extendDeep(t, envOverride);
+			var curCtxt = envOverride;
+			for (var i = 0, l = parts.length; i < l; i++) {
+				var partName = parts[i].replace('`','_');
+				if (i == l - 1) {
+					// Final (element) part
+					curCtxt[partName] = value;
+				}
+				else {
+					// Mid (object) part
+					curCtxt[partName] = curCtxt[partName] || {};
+					curCtxt = curCtxt[partName];
+				}
+			}
+		}
+	}
+	t._extendDeep(t, envOverride);
 
-  // Attach the config.prototype to all sub-objects.
-  t._attachProtoDeep(t);
+	// Attach the config_moved.prototype to all sub-objects.
+	t._attachProtoDeep(t);
 
-  // Return the configuration object
-  return t;
+	// Return the configuration object
+	return t;
 };
 
 /**
  * Parse and return the specified configuration file.
  *
- * If the file exists in the application config directory, it will
+ * If the file exists in the application config_moved directory, it will
  * parse and return it as a JavaScript object.
  *
  * The file extension determines the parser to use.
  *
- * .js = File to run that has a module.exports containing the config object
+ * .js = File to run that has a module.exports containing the config_moved object
  * .json = File is parsed using JSON.parse()
- * .coffee = File to run that has a module.exports with coffee-script containing the config object
+ * .coffee = File to run that has a module.exports with coffee-script containing the config_moved object
  * .yaml (or .yml) = Parsed with a YAML parser
  *
  * If the file doesn't exist, a null will be returned.  If the file can't be
@@ -688,98 +688,98 @@ Config.prototype._loadFileConfigs = function() {
  */
 Config.prototype._parseFile = function(fullFilename) {
 
-  // Initialize
-  var t = this,
-      extension = fullFilename.substr(fullFilename.lastIndexOf('.') + 1),
-      configObject = null,
-      fileContent = null;
+	// Initialize
+	var t = this,
+		extension = fullFilename.substr(fullFilename.lastIndexOf('.') + 1),
+		configObject = null,
+		fileContent = null;
 
-  // Make sure the runtime.json file exists.  This is required for fs.watch().
-  var checkRuntimeJson = function() {
-    if (fullFilename == runtimeJsonFilename) {
-      try {
-        FileSystem.writeFileSync(runtimeJsonFilename, '{}');
-      } catch (e) {
-        console.log("Cannot write runtime.json file " + e);
-        //if we cannot write file, clear watch function
-        t.watchForConfigFileChanges = function () {
-          return;
-        };
-      }
-      return {};
-    }
-    return null;
-  };
+	// Make sure the runtime.json file exists.  This is required for fs.watch().
+	var checkRuntimeJson = function() {
+		if (fullFilename == runtimeJsonFilename) {
+			try {
+				FileSystem.writeFileSync(runtimeJsonFilename, '{}');
+			} catch (e) {
+				console.log("Cannot write runtime.json file " + e);
+				//if we cannot write file, clear watch function
+				t.watchForConfigFileChanges = function () {
+					return;
+				};
+			}
+			return {};
+		}
+		return null;
+	};
 
-  // Return null if the file doesn't exist.
-  // Note that all methods here are the Sync versions.  This is appropriate during
-  // module loading (which is a synchronous operation), but not thereafter.
-  try {
-    var stat = FileSystem.statSync(fullFilename);
-    if (!stat || stat.size < 1) {
-      return checkRuntimeJson();
-    }
-  } catch (e1) {
-    return checkRuntimeJson();
-  }
+	// Return null if the file doesn't exist.
+	// Note that all methods here are the Sync versions.  This is appropriate during
+	// module loading (which is a synchronous operation), but not thereafter.
+	try {
+		var stat = FileSystem.statSync(fullFilename);
+		if (!stat || stat.size < 1) {
+			return checkRuntimeJson();
+		}
+	} catch (e1) {
+		return checkRuntimeJson();
+	}
 
-  // Try loading the file.
-  try {
-    fileContent = FileSystem.readFileSync(fullFilename, 'UTF-8');
-  }
-  catch (e2) {
-    throw new Error('Config file ' + fullFilename + ' cannot be read');
-  }
+	// Try loading the file.
+	try {
+		fileContent = FileSystem.readFileSync(fullFilename, 'UTF-8');
+	}
+	catch (e2) {
+		throw new Error('Config file ' + fullFilename + ' cannot be read');
+	}
 
-  // Parse the file based on extension
-  try {
-    if (extension === 'yaml' || extension === 'yml') {
-      if (!Yaml && !VisionmediaYaml) {
-        // Lazy loading
-        try {
-          // Try to load the better js-yaml module
-          Yaml = require('js-yaml');
-        }
-        catch (e) {
-          // If it doesn't exist, load the fallback visionmedia yaml module.
-          VisionmediaYaml = require('yaml');
-        }
-      }
+	// Parse the file based on extension
+	try {
+		if (extension === 'yaml' || extension === 'yml') {
+			if (!Yaml && !VisionmediaYaml) {
+				// Lazy loading
+				try {
+					// Try to load the better js-yaml module
+					Yaml = require('js-yaml');
+				}
+				catch (e) {
+					// If it doesn't exist, load the fallback visionmedia yaml module.
+					VisionmediaYaml = require('yaml');
+				}
+			}
 
-      if (Yaml) {
-        configObject = Yaml.load(t._stripYamlComments(fileContent));
-      }
-      else if (VisionmediaYaml) {
-        // The yaml library doesn't like strings that have newlines but don't
-        // end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13
-        fileContent += '\n';
-        configObject = VisionmediaYaml.eval(t._stripYamlComments(fileContent));
-      }
-    }
-    else if (extension == 'json') {
-      // Allow comments in JSON files
-      configObject = JSON.parse(t._stripComments(fileContent));
-    }
-    else if (extension == 'js') {
-      // Use the built-in parser for .js files
-      configObject = require(fullFilename);
-    }
-    else if (extension == 'coffee') {
-      // Lazy load the coffee-script extension
-      Coffee = Coffee || require('coffee-script');
-      // Use the built-in parser for .coffee files with coffee-script
-      configObject = require(fullFilename);
-    }
-  }
-  catch (e3) {
-    throw new Error("Cannot parse config file: '" + fullFilename + "': " + e3);
-  }
+			if (Yaml) {
+				configObject = Yaml.load(t._stripYamlComments(fileContent));
+			}
+			else if (VisionmediaYaml) {
+				// The yaml library doesn't like strings that have newlines but don't
+				// end in a newline: https://github.com/visionmedia/js-yaml/issues/issue/13
+				fileContent += '\n';
+				configObject = VisionmediaYaml.eval(t._stripYamlComments(fileContent));
+			}
+		}
+		else if (extension == 'json') {
+			// Allow comments in JSON files
+			configObject = JSON.parse(t._stripComments(fileContent));
+		}
+		else if (extension == 'js') {
+			// Use the built-in parser for .js files
+			configObject = require(fullFilename);
+		}
+		else if (extension == 'coffee') {
+			// Lazy load the coffee-script extension
+			Coffee = Coffee || require('coffee-script');
+			// Use the built-in parser for .coffee files with coffee-script
+			configObject = require(fullFilename);
+		}
+	}
+	catch (e3) {
+		throw new Error("Cannot parse config_moved file: '" + fullFilename + "': " + e3);
+	}
 
-  return configObject;
+	return configObject;
 };
 
 /**
- * Attach the Config class prototype to all config objects recursively.
+ * Attach the Config class prototype to all config_moved objects recursively.
  *
  * <p>
  * This allows you to do anything with CONFIG sub-objects as you can do with
@@ -787,7 +787,7 @@ Config.prototype._parseFile = function(fullFilename) {
  * </p>
  *
  * <pre>
- *   var CUST_CONFIG = require('config').Customer;
+ *   var CUST_CONFIG = require('config_moved').Customer;
  *   CUST_CONFIG.watch(...)
  * </pre>
  *
@@ -799,30 +799,30 @@ Config.prototype._parseFile = function(fullFilename) {
  */
 Config.prototype._attachProtoDeep = function(toObject, depth) {
 
-  // Recursion detection
-  var t = this;
-  depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
-  if (depth < 0) {
-    return toObject;
-  }
+	// Recursion detection
+	var t = this;
+	depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
+	if (depth < 0) {
+		return toObject;
+	}
 
-  // Adding Config.prototype methods directly to toObject as hidden properties
-  // because adding to toObject.__proto__ exposes the function in toObject
-  for (var fnName in Config.prototype) {
-    t.makeHidden(toObject, fnName, Config.prototype[fnName]);
-  }
+	// Adding Config.prototype methods directly to toObject as hidden properties
+	// because adding to toObject.__proto__ exposes the function in toObject
+	for (var fnName in Config.prototype) {
+		t.makeHidden(toObject, fnName, Config.prototype[fnName]);
+	}
 
-  // Cycle through each element
-  for (var prop in toObject) {
+	// Cycle through each element
+	for (var prop in toObject) {
 
-    // Call recursively if an object
-    if (t._isObject(toObject[prop])) {
-      t._attachProtoDeep(toObject[prop], depth - 1);
-    }
-  }
+		// Call recursively if an object
+		if (t._isObject(toObject[prop])) {
+			t._attachProtoDeep(toObject[prop], depth - 1);
+		}
+	}
 
-  // Return the original object
-  return toObject;
+	// Return the original object
+	return toObject;
 
 };
 
@@ -841,30 +841,30 @@ Config.prototype._attachProtoDeep = function(toObject, depth) {
  */
 Config.prototype._cloneDeep = function(obj, depth) {
 
-  // Recursion detection
-  var t = this;
-  depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
-  if (depth < 0) {
-    return {};
-  }
+	// Recursion detection
+	var t = this;
+	depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
+	if (depth < 0) {
+		return {};
+	}
 
-  // Create the copy of the correct type
-  var copy = Array.isArray(obj) ? [] : {};
+	// Create the copy of the correct type
+	var copy = Array.isArray(obj) ? [] : {};
 
-  // Cycle through each element
-  for (var prop in obj) {
+	// Cycle through each element
+	for (var prop in obj) {
 
-    // Call recursively if an object or array
-    if (obj[prop] && typeof obj[prop] == 'object') {
-      copy[prop] = t._cloneDeep(obj[prop], depth - 1);
-    }
-    else {
-      copy[prop] = obj[prop];
-    }
-  }
+		// Call recursively if an object or array
+		if (obj[prop] && typeof obj[prop] == 'object') {
+			copy[prop] = t._cloneDeep(obj[prop], depth - 1);
+		}
+		else {
+			copy[prop] = obj[prop];
+		}
+	}
 
-  // Return the copied object
-  return copy;
+	// Return the copied object
+	return copy;
 
 };
 
@@ -880,49 +880,49 @@ Config.prototype._cloneDeep = function(obj, depth) {
  */
 Config.prototype._equalsDeep = function(object1, object2, depth) {
 
-  // Recursion detection
-  var t = this;
-  depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
-  if (depth < 0) {
-    return {};
-  }
+	// Recursion detection
+	var t = this;
+	depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
+	if (depth < 0) {
+		return {};
+	}
 
-  // Fast comparisons
-  if (!object1 || !object2) {
-    return false;
-  }
-  if (object1 === object2) {
-    return true;
-  }
-  if (typeof(object1) != 'object' || typeof(object2) != 'object') {
-    return false;
-  }
+	// Fast comparisons
+	if (!object1 || !object2) {
+		return false;
+	}
+	if (object1 === object2) {
+		return true;
+	}
+	if (typeof(object1) != 'object' || typeof(object2) != 'object') {
+		return false;
+	}
 
-  // They must have the same keys.  If their length isn't the same
-  // then they're not equal.  If the keys aren't the same, the value
-  // comparisons will fail.
-  if (Object.keys(object1).length != Object.keys(object2).length) {
-    return false;
-  }
+	// They must have the same keys.  If their length isn't the same
+	// then they're not equal.  If the keys aren't the same, the value
+	// comparisons will fail.
+	if (Object.keys(object1).length != Object.keys(object2).length) {
+		return false;
+	}
 
-  // Compare the values
-  for (var prop in object1) {
+	// Compare the values
+	for (var prop in object1) {
 
-    // Call recursively if an object or array
-    if (object1[prop] && typeof(object1[prop]) === 'object') {
-      if (!t._equalsDeep(object1[prop], object2[prop], depth - 1)) {
-        return false;
-      }
-    }
-    else {
-      if (object1[prop] !== object2[prop]) {
-        return false;
-      }
-    }
-  }
+		// Call recursively if an object or array
+		if (object1[prop] && typeof(object1[prop]) === 'object') {
+			if (!t._equalsDeep(object1[prop], object2[prop], depth - 1)) {
+				return false;
+			}
+		}
+		else {
+			if (object1[prop] !== object2[prop]) {
+				return false;
+			}
+		}
+	}
 
-  // Test passed.
-  return true;
+	// Test passed.
+	return true;
 };
 
 /**
@@ -947,30 +947,30 @@ Config.prototype._equalsDeep = function(object1, object2, depth) {
  */
 Config.prototype._diffDeep = function(object1, object2, depth) {
 
-  // Recursion detection
-  var t = this, diff = {};
-  depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
-  if (depth < 0) {
-    return {};
-  }
+	// Recursion detection
+	var t = this, diff = {};
+	depth = (depth === null ? DEFAULT_CLONE_DEPTH : depth);
+	if (depth < 0) {
+		return {};
+	}
 
-  // Process each element from object2, adding any element that's different
-  // from object 1.
-  for (var parm in object2) {
-    var value1 = object1[parm];
-    var value2 = object2[parm];
-    if (value1 && value2 && typeof(value2) == 'object') {
-      if (!(t._equalsDeep(value1, value2))) {
-        diff[parm] = t._diffDeep(value1, value2, depth - 1);
-      }
-    }
-    else if (value1 !== value2){
-      diff[parm] = value2;
-    }
-  }
+	// Process each element from object2, adding any element that's different
+	// from object 1.
+	for (var parm in object2) {
+		var value1 = object1[parm];
+		var value2 = object2[parm];
+		if (value1 && value2 && typeof(value2) == 'object') {
+			if (!(t._equalsDeep(value1, value2))) {
+				diff[parm] = t._diffDeep(value1, value2, depth - 1);
+			}
+		}
+		else if (value1 !== value2){
+			diff[parm] = value2;
+		}
+	}
 
-  // Return the diff object
-  return diff;
+	// Return the diff object
+	return diff;
 
 };
 
@@ -989,45 +989,45 @@ Config.prototype._diffDeep = function(object1, object2, depth) {
  */
 Config.prototype._extendDeep = function(mergeInto) {
 
-  // Initialize
-  var t = this;
-  var vargs = Array.prototype.slice.call(arguments, 1);
-  var depth = vargs.pop();
-  if (typeof(depth) != 'number') {
-    vargs.push(depth);
-    depth = DEFAULT_CLONE_DEPTH;
-  }
+	// Initialize
+	var t = this;
+	var vargs = Array.prototype.slice.call(arguments, 1);
+	var depth = vargs.pop();
+	if (typeof(depth) != 'number') {
+		vargs.push(depth);
+		depth = DEFAULT_CLONE_DEPTH;
+	}
 
-  // Recursion detection
-  if (depth < 0) {
-    return mergeInto;
-  }
+	// Recursion detection
+	if (depth < 0) {
+		return mergeInto;
+	}
 
-  // Cycle through each object to extend
-  vargs.forEach(function(mergeFrom) {
+	// Cycle through each object to extend
+	vargs.forEach(function(mergeFrom) {
 
-    // Cycle through each element of the object to merge from
-    for (var prop in mergeFrom) {
+		// Cycle through each element of the object to merge from
+		for (var prop in mergeFrom) {
 
-      // Extend recursively if both elements are objects
-      if (t._isObject(mergeInto[prop]) && t._isObject(mergeFrom[prop])) {
-        t._extendDeep(mergeInto[prop], mergeFrom[prop], depth - 1);
-      }
+			// Extend recursively if both elements are objects
+			if (t._isObject(mergeInto[prop]) && t._isObject(mergeFrom[prop])) {
+				t._extendDeep(mergeInto[prop], mergeFrom[prop], depth - 1);
+			}
 
-      // Copy recursively if the mergeFrom element is an object (or array or fn)
-      else if (mergeFrom[prop] && typeof mergeFrom[prop] == 'object') {
-        mergeInto[prop] = t._cloneDeep(mergeFrom[prop], depth - 1);
-      }
+			// Copy recursively if the mergeFrom element is an object (or array or fn)
+			else if (mergeFrom[prop] && typeof mergeFrom[prop] == 'object') {
+				mergeInto[prop] = t._cloneDeep(mergeFrom[prop], depth - 1);
+			}
 
-      // Simple assignment otherwise
-      else {
-        mergeInto[prop] = mergeFrom[prop];
-      }
-    }
-  });
+			// Simple assignment otherwise
+			else {
+				mergeInto[prop] = mergeFrom[prop];
+			}
+		}
+	});
 
-  // Chain
-  return mergeInto;
+	// Chain
+	return mergeInto;
 
 };
 
@@ -1042,9 +1042,9 @@ Config.prototype._extendDeep = function(mergeInto) {
  * @return {string} The string with comments stripped.
  */
 Config.prototype._stripYamlComments = function(fileStr) {
-  // First replace removes comment-only lines
-  // Second replace removes blank lines
-  return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
+	// First replace removes comment-only lines
+	// Second replace removes blank lines
+	return fileStr.replace(/^\s*#.*/mg,'').replace(/^\s*[\n|\r]+/mg,'');
 }
 
 /**
@@ -1063,50 +1063,50 @@ Config.prototype._stripYamlComments = function(fileStr) {
  */
 Config.prototype._stripComments = function(fileStr) {
 
-  var uid = '_' + +new Date(),
-      primitives = [],
-      primIndex = 0;
+	var uid = '_' + +new Date(),
+		primitives = [],
+		primIndex = 0;
 
-  return (
-    fileStr
+	return (
+		fileStr
 
-    /* Remove strings */
-    .replace(/(['"])(\\\1|.)+?\1/g, function(match){
-      primitives[primIndex] = match;
-      return (uid + '') + primIndex++;
-    })
+			/* Remove strings */
+			.replace(/(['"])(\\\1|.)+?\1/g, function(match){
+				primitives[primIndex] = match;
+				return (uid + '') + primIndex++;
+			})
 
-    /* Remove Regexes */
-    .replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
-      primitives[primIndex] = $2;
-      return $1 + (uid + '') + primIndex++;
-    })
+			/* Remove Regexes */
+			.replace(/([^\/])(\/(?!\*|\/)(\\\/|.)+?\/[gim]{0,3})/g, function(match, $1, $2){
+				primitives[primIndex] = $2;
+				return $1 + (uid + '') + primIndex++;
+			})
 
-    /*
-    - Remove single-line comments that contain would-be multi-line delimiters
-        E.g. // Comment /* <--
-    - Remove multi-line comments that contain would be single-line delimiters
-        E.g. /* // <--
-   */
-    .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, '')
+			/*
+			 - Remove single-line comments that contain would-be multi-line delimiters
+			 E.g. // Comment /* <--
+			 - Remove multi-line comments that contain would be single-line delimiters
+			 E.g. /* // <--
+			 */
+			.replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, '')
 
-    /*
-    Remove single and multi-line comments,
-    no consideration of inner-contents
-   */
-    .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, '')
+			/*
+			 Remove single and multi-line comments,
+			 no consideration of inner-contents
+			 */
+			.replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, '')
 
-    /*
-    Remove multi-line comments that have a replaced ending (string/regex)
-    Greedy, so no inner strings/regexes will stop it.
-   */
-    .replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), '')
+			/*
+			 Remove multi-line comments that have a replaced ending (string/regex)
+			 Greedy, so no inner strings/regexes will stop it.
+			 */
+			.replace(RegExp('\\/\\*[\\s\\S]+' + uid + '\\d+', 'g'), '')
 
-    /* Bring back strings & regexes */
-    .replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
-      return primitives[n];
-    })
-  );
+			/* Bring back strings & regexes */
+			.replace(RegExp(uid + '(\\d+)', 'g'), function(match, n){
+				return primitives[n];
+			})
+		);
 
 };
 
@@ -1121,7 +1121,7 @@ Config.prototype._stripComments = function(fileStr) {
  * @return {boolean} TRUE if the arg is an object, FALSE if not
  */
 Config.prototype._isObject = function(obj) {
-  return (obj !== null) && (typeof obj == 'object') && !(Array.isArray(obj));
+	return (obj !== null) && (typeof obj == 'object') && !(Array.isArray(obj));
 };
 
 // Assure the configuration object is a singleton.
