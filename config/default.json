@@ -1,0 +1,49 @@
+{
+  "links" : {
+    "apiBaseUrl" : "http://api.qa09.sea1.cmates.com",
+    "apiBaseHost" : "api.qa09.sea1.cmates.com",
+    "authBaseUrl" : "https://secure.qa09.sea1.cmates.com/auth",
+    "checkoutBaseUrl" : "https://secure.qa09.sea1.cmates.com/checkout",
+    "cmcdnGraphicsHostUrl" : "http://www.jasoncorns.com",
+    "cookieDomain" : ".qa09.sea1.cmates.com",
+    "directoryBaseUrl" : "http://www.qa09.sea1.cmates.com/directory",
+    "environmentBaseUrl" : "http://www.qa09.sea1.cmates.com",
+    "featureBaseUrl" : "http://www.qa09.sea1.cmates.com/feature",
+    "graphicsBaseUrl" : "http://graphics.qa09.sea1.cmates.com/graphics",
+    "homeBaseUrl" : "http://www.qa09.sea1.cmates.com/home",
+    "imageDisplayHostUrl" : "http://images.qa09.sea1.cmates.com",
+    "inboxBaseUrl" : "http://www.qa09.sea1.cmates.com/inbox",
+    "onboardingBaseUrl" : "http://www.qa09.sea1.cmates.com/onboarding",
+    "peopleBaseUrl" : "http://www.qa09.sea1.cmates.com/people",
+    "photosBaseUrl" : "http://images.qa09.sea1.cmates.com/photos",
+    "photosImageserverUrl" : "http://images.qa09.sea1.cmates.com/imgsvc",
+    "photosUploadBaseUrl" : "http://www.qa09.sea1.cmates.com/uploader",
+    "placesBaseUrl" : "http://www.qa09.sea1.cmates.com/places",
+    "registrationBaseUrl" : "http://www.qa09.sea1.cmates.com/registration",
+    "reunionsBaseUrl" : "http://www.qa09.sea1.cmates.com/reunions",
+    "searchBaseUrl" : "http://www.qa09.sea1.cmates.com/search",
+    "secureGraphicsBaseUrl" : "https://secure.qa09.sea1.cmates.com/graphics",
+    "securePeopleBaseUrl" : "https://secure.qa09.sea1.cmates.com/people",
+    "secureServerUrl" : "https://secure.qa09.sea1.cmates.com",
+    "sitesearchBaseUrl" : "http://www.qa09.sea1.cmates.com/sitesearch",
+    "socketBaseUrl" : "http://nodejs01.qa09.sea1.cmates.com",
+    "yearbooksBaseUrl" : "http://www.qa09.sea1.cmates.com/yearbooks"
+  },
+  "analytics" : {
+    "omnitureJsFile" : "s_code_remote_dev.js",
+    "siteCatalystTagContainerName" : "cmNotProd",
+    "siteCatalystAccount" : "Dev"
+  },
+  "facebook" : {
+    "facebookAppID" : "355423464522219",
+    "facebookAppName" : "cmqatestapp"
+  },
+  "oas" : {
+      "oasHomeAddress": "www.cmates.com",
+      "oasMjxAddress": "http://phoenix.qa2.untd.com",
+      "useOasMjx": "test"
+  },
+  "debug" : {
+    "debugEnabled" : false
+  }
+}
