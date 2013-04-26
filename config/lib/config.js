@@ -24,7 +24,7 @@ var DEFAULT_CLONE_DEPTH = 6,
 
 console.log('========================== CONFIG_DIR');
 console.log("NODE_CONFIG_DIR: " + process.env['NODE_CONFIG_DIR']);
-console.log('CWD: ' + process.cwd());
+console.log('CONFIG_DIR: ' + CONFIG_DIR);
 console.log('runtimeJSFile: ' + runtimeJsonFilename);
 console.log('====================== END CONFIG_DIR');
 /**
