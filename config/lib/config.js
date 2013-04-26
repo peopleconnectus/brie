@@ -1,8 +1,8 @@
 /*jsl:declare global */
-// config_moved.js (c) 2010-2013 Loren West and other contributors
+// config.js (c) 2010-2013 Loren West and other contributors
 // May be freely distributed under the MIT license.
 // For further details and documentation:
-// http://lorenwest.github.com/node-config_moved
+// http://lorenwest.github.com/node-config
 
 // Dependencies
 var Yaml = null,    // External libraries are lazy-loaded
@@ -14,7 +14,7 @@ var Yaml = null,    // External libraries are lazy-loaded
 var DEFAULT_CLONE_DEPTH = 6,
 	FILE_WATCHER_INTERVAL = 2500, // For old style (pre-6.0) file watching
 	DIR = 'NODE_CONFIG_DIR',
-	CONFIG_DIR = process.env[DIR] || process.cwd() + '/config_moved',
+	CONFIG_DIR = process.env[DIR] || process.cwd() + '/config',
 	RUNTIME = 'NODE_CONFIG_RUNTIME_JSON',
 	runtimeJsonFilename = './runtime.json', //process.env[RUNTIME] || CONFIG_DIR + '/runtime.json', // shortcut this file location because QA09 was breaking.
 	originalConfig = null,       // Not including the runtime.json values
@@ -31,19 +31,19 @@ var DEFAULT_CLONE_DEPTH = 6,
  * <p>Runtime Application Configurations</p>
  *
  * <p>
- * The config_moved module exports a singleton object representing all runtime
+ * The config module exports a singleton object representing all runtime
  * configurations for this application deployment.
  * </p>
  *
  * <p>
- * Application configurations are stored in files within the config_moved directory
+ * Application configurations are stored in files within the config directory
  * of your application.  The default configuration file is loaded, followed
  * by files specific to the deployment type (development, testing, staging,
  * production, etc.).
  * </p>
  *
  * <p>
- * For example, with the following config_moved/default.yaml file:
+ * For example, with the following config/default.yaml file:
  * </p>
  *
  * <pre>
@@ -61,14 +61,14 @@ var DEFAULT_CLONE_DEPTH = 6,
  * <p>
  *
  * <pre>
- *   var CONFIG = require('config_moved').customer;
+ *   var CONFIG = require('config').customer;
  *   ...
  *   newCustomer.creditLimit = CONFIG.initialCredit;
  *   database.open(CONFIG.db.name, CONFIG.db.port);
  *   ...
  * </pre>
  *
- * @module config_moved
+ * @module config
  * @class Config
  */
 
@@ -77,7 +77,7 @@ var DEFAULT_CLONE_DEPTH = 6,
  *
  * <p>
  * The configuration object is a shared singleton object within the applicaiton,
- * attained by calling require('config_moved').
+ * attained by calling require('config').
  * </p>
  *
  * <p>
@@ -85,7 +85,7 @@ var DEFAULT_CLONE_DEPTH = 6,
  * for file/module scope. If you want the root of the object, you can do this:
  * </p>
  * <pre>
- * var CONFIG = require('config_moved');
+ * var CONFIG = require('config');
  * </pre>
  *
  * <p>
@@ -93,9 +93,9 @@ var DEFAULT_CLONE_DEPTH = 6,
  * object.  In that case you could do this at the top of your file:
  * </p>
  * <pre>
- * var CONFIG = require('config_moved').customer;
+ * var CONFIG = require('config').customer;
  * or
- * var CUSTOMER_CONFIG = require('config_moved').customer;
+ * var CUSTOMER_CONFIG = require('config').customer;
  * </pre>
  *
  * <script type="text/javascript">
@@ -116,7 +116,7 @@ var Config = function() {
  *
  * <p>
  * Configuration values can be changed at runtime by the application or by a
- * manual change to the config_moved/runtime.json  file.
+ * manual change to the config/runtime.json  file.
  * This method lets you specify a function to run when a configuration
  * value changes.
  * </p>
@@ -128,7 +128,7 @@ var Config = function() {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config_moved').customer;
+ *   var CONFIG = require('config').customer;
  *   ...
  *
  *   // Watch for any changes to the customer configuration
@@ -264,13 +264,13 @@ Config.prototype.watch = function(object, property, handler, depth) {
  *
  * <p>Using the function within your module:</p>
  * <pre>
- *   var CONFIG = require("config_moved");
+ *   var CONFIG = require("config");
  *   CONFIG.setModuleDefaults("MyModule", {
  *   &nbsp;&nbsp;templateName: "t-50",
  *   &nbsp;&nbsp;colorScheme: "green"
  *   });
  * <br>
- *   // Template name may be overridden by application config_moved files
+ *   // Template name may be overridden by application config files
  *   console.log("Template: " + CONFIG.MyModule.templateName);
  * </pre>
  *
@@ -290,19 +290,19 @@ Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
 	var t = this;
 	var moduleConfig = t._extendDeep({}, defaultProperties);
 
-	// Attach handlers & watchers onto the module config_moved object
+	// Attach handlers & watchers onto the module config object
 	t._attachProtoDeep(moduleConfig);
 	t._persistConfigsOnChange(moduleConfig);
 
-	// Extend the module config_moved object with values from originalConfig
+	// Extend the module config object with values from originalConfig
 	if (originalConfig[moduleName]) {
 		t._extendDeep(moduleConfig, originalConfig[moduleName]);
 	}
 
-	// Save the mixed module config_moved as the original
+	// Save the mixed module config as the original
 	originalConfig[moduleName] = t._cloneDeep(moduleConfig);
 
-	// Extend the module config_moved object with values from runtimeJson
+	// Extend the module config object with values from runtimeJson
 	if (runtimeJson[moduleName]) {
 		t._extendDeep(moduleConfig, runtimeJson[moduleName]);
 	}
@@ -310,7 +310,7 @@ Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
 	// Attach the object onto the CONFIG object
 	t[moduleName] = moduleConfig;
 
-	// Return the module config_moved
+	// Return the module config
 	return moduleConfig;
 };
 
@@ -335,7 +335,7 @@ Config.prototype.setModuleDefaults = function(moduleName, defaultProperties) {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config_moved');
+ *   var CONFIG = require('config');
  *   ...
  *
  *   // Hide the Amazon S3 credentials
@@ -378,7 +378,7 @@ Config.prototype.makeHidden = function(object, property, value) {
  *
  * <p>Example:</p>
  * <pre>
- *   var CONFIG = require('config_moved').customer;
+ *   var CONFIG = require('config').customer;
  *   ...
  *
  *   // Obtain a DB connection using CONFIG parameters
@@ -415,8 +415,8 @@ Config.prototype.makeImmutable = function(object, property, value) {
  * Change the runtime.json file watching polling interval.
  *
  * <p>
- * Node-config_moved automatically monitors and apply changes made to the
- * config_moved/runtime.json file.  This paradigm allows for manual changes to running
+ * Node-config automatically monitors and apply changes made to the
+ * config/runtime.json file.  This paradigm allows for manual changes to running
  * application servers, and for multi-node application servers to keep in sync.
  * </p>
  *
@@ -455,7 +455,7 @@ Config.prototype.watchForConfigFileChanges = function(interval) {
 				return;
 			}
 
-			// Parse the file and mix it in to this config_moved object.
+			// Parse the file and mix it in to this config object.
 			// This notifies listeners
 			try {
 				var configObject = JSON.parse(t._stripComments(fileContent));
@@ -497,7 +497,7 @@ Config.prototype.watchForConfigFileChanges = function(interval) {
  * </p>
  *
  * @protected
- * @param object {object} - The config_moved object to watch
+ * @param object {object} - The config object to watch
  * @method _persistConfigsOnChange
  */
 Config.prototype._persistConfigsOnChange = function(objectToWatch) {
@@ -512,7 +512,7 @@ Config.prototype._persistConfigsOnChange = function(objectToWatch) {
 			return;
 
 		// Defer persisting until the next tick.  This results in a single
-		// persist across any number of config_moved changes in a single event cycle.
+		// persist across any number of config changes in a single event cycle.
 		isQueuedForPersistence = true;
 		process.nextTick(function(){
 
@@ -553,7 +553,7 @@ Config.prototype._persistConfigsOnChange = function(objectToWatch) {
  * EXT can be yml, yaml, coffee, json, or js signifying the file type.
  * yaml (and yml) is in YAML format, coffee is a coffee-script,
  * json is in JSON format, and js is a javascript executable file that is
- * require()'d with module.exports being the config_moved object.
+ * require()'d with module.exports being the config object.
  * </p>
  *
  * <p>
@@ -606,7 +606,7 @@ Config.prototype._loadFileConfigs = function() {
 	var extNames = ['js', 'json', 'coffee', 'yaml', 'yml'];
 	baseNames.forEach(function(baseName) {
 		extNames.forEach(function(extName) {
-			// Try merging the config_moved object into this object
+			// Try merging the config object into this object
 			var fullFilename = CONFIG_DIR + '/' + baseName + '.' + extName;
 			var configObj = t._parseFile(fullFilename);
 			if (configObj) {
@@ -618,7 +618,7 @@ Config.prototype._loadFileConfigs = function() {
 	// Remember the original configuration
 	originalConfig = t._cloneDeep(t);
 
-	// Extend the original config_moved with any prior runtime.json diffs
+	// Extend the original config with any prior runtime.json diffs
 	runtimeJson = t._parseFile(runtimeJsonFilename) || {};
 	t._extendDeep(t, runtimeJson);
 
@@ -655,7 +655,7 @@ Config.prototype._loadFileConfigs = function() {
 	}
 	t._extendDeep(t, envOverride);
 
-	// Attach the config_moved.prototype to all sub-objects.
+	// Attach the config.prototype to all sub-objects.
 	t._attachProtoDeep(t);
 
 	// Return the configuration object
@@ -665,14 +665,14 @@ Config.prototype._loadFileConfigs = function() {
 /**
  * Parse and return the specified configuration file.
  *
- * If the file exists in the application config_moved directory, it will
+ * If the file exists in the application config directory, it will
  * parse and return it as a JavaScript object.
  *
  * The file extension determines the parser to use.
  *
- * .js = File to run that has a module.exports containing the config_moved object
+ * .js = File to run that has a module.exports containing the config object
  * .json = File is parsed using JSON.parse()
- * .coffee = File to run that has a module.exports with coffee-script containing the config_moved object
+ * .coffee = File to run that has a module.exports with coffee-script containing the config object
  * .yaml (or .yml) = Parsed with a YAML parser
  *
  * If the file doesn't exist, a null will be returned.  If the file can't be
@@ -772,14 +772,14 @@ Config.prototype._parseFile = function(fullFilename) {
 		}
 	}
 	catch (e3) {
-		throw new Error("Cannot parse config_moved file: '" + fullFilename + "': " + e3);
+		throw new Error("Cannot parse config file: '" + fullFilename + "': " + e3);
 	}
 
 	return configObject;
 };
 
 /**
- * Attach the Config class prototype to all config_moved objects recursively.
+ * Attach the Config class prototype to all config objects recursively.
  *
  * <p>
  * This allows you to do anything with CONFIG sub-objects as you can do with
@@ -787,7 +787,7 @@ Config.prototype._parseFile = function(fullFilename) {
  * </p>
  *
  * <pre>
- *   var CUST_CONFIG = require('config_moved').Customer;
+ *   var CUST_CONFIG = require('config').Customer;
  *   CUST_CONFIG.watch(...)
  * </pre>
  *
