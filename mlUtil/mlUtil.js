@@ -26,15 +26,13 @@ util.checkPermission = function(permissionObj,permission){
 
 util.handleNonSocketRequest = function(request,response) {
     var baseUrl = request.url.split('?');
-	console.log(baseUrl[0]);
-
     if (baseUrl[0] == '/static/config.js') {
         util.writeConfigJsonInResponse(response);
     }
 };
 
 util.writeConfigJsonInResponse = function(response) {
-    var configsAvailToClient = new Array ('links','facebook'); // add as many top level attributes from the CONFIG object as needed
+    var configsAvailToClient = new Array ('links','facebook','oas','analytics'); // add as many top level attributes from the CONFIG object as needed
     response.write('var envConf = {');
     for (var i=0; i<configsAvailToClient.length; i++) {
         var key = configsAvailToClient[i];
