@@ -46,10 +46,15 @@ var restWrapper = function(path,method,jsonReq,reqHeader,host,port){
                     resultObj = {'errorCode' : self.statusCode};
                 };
                 self.resultObj = resultObj;
+
                 if(self.statusCode < 200 || self.statusCode >= 300){
+
                     self.logError();
                     self.onError();
                 }
+
+
+
                 if(self.statusCode >= 200 && self.statusCode < 300) self.onEnd();
             });
         });
@@ -77,10 +82,14 @@ restWrapper.prototype.onEnd = function(){
 };
 
 restWrapper.prototype.onError = function(){
+
+    if(!this.resultObj.records) this.resultObj.records = [];
+
     if(this.socket){
         this.socket.emit(this.callbackName,this.resultObj);
-    }else if(this.asyncCallback)
+    }else if(this.asyncCallback){
         this.asyncCallback(null,this.resultObj);
+    }
 };
 
 exports.restWrapper = restWrapper;
