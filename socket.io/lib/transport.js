@@ -382,6 +382,11 @@ Transport.prototype.onMessage = function (packet) {
       }
     }
 
+    // NOTE: ADDED by Brian K. to handle all messages.
+	if (this.manager.onAnyPacket) {
+		this.manager.onAnyPacket(this, packet);
+	}
+
     // handle packet locally or publish it
     if (current) {
       this.manager.onClientMessage(this.id, packet);
