@@ -1,0 +1,37 @@
+{
+  "author": {
+    "name": "Forward"
+  },
+  "contributors": [
+    {
+      "name": "Luca Grulla"
+    },
+    {
+      "name": "Tom Hall"
+    },
+    {
+      "name": "Andy Kent"
+    }
+  ],
+  "name": "tail",
+  "description": "tail a file in node",
+  "version": "0.2.4",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/forward/node-tail.git"
+  },
+  "main": "tail",
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script": "1.1.1"
+  },
+  "_id": "tail@0.2.4",
+  "readme": "ERROR: No README.md file found!",
+  "dist": {
+    "shasum": "81692686a651feab734fe3846a00074990fb5374"
+  },
+  "_from": "tail"
+}
