@@ -216,6 +216,13 @@ Transport.prototype.onForcedDisconnect = function () {
  */
 
 Transport.prototype.onDispatch = function (packet, volatile) {
+	// NOTE: ADDED by Brian K. to handle all outgoing messages.
+	if (this.manager.onOutgoingMessage) {
+		var objectStart = packet.indexOf('{');
+		if (objectStart != -1)
+			this.manager.onOutgoingMessage(this, JSON.parse(packet.substr(objectStart)));
+	}
+
   if (volatile) {
     this.writeVolatile(packet);
   } else {
@@ -382,9 +389,9 @@ Transport.prototype.onMessage = function (packet) {
       }
     }
 
-    // NOTE: ADDED by Brian K. to handle all messages.
-	if (this.manager.onAnyPacket) {
-		this.manager.onAnyPacket(this, packet);
+    // NOTE: ADDED by Brian K. to handle all incoming messages.
+	if (this.manager.onIncomingMessage) {
+		this.manager.onIncomingMessage(this, packet);
 	}
 
     // handle packet locally or publish it
