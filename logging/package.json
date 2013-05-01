@@ -1,0 +1,5 @@
+{
+  "name": "logging",
+  "main": "./logging",
+  "version": "0.0.1"
+}
