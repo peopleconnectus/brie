@@ -1,0 +1,19 @@
+{
+    "name": "barry",
+    "description": "Classmates internal iteration of a Business Rules Engine",
+    "author": "Jason Corns <jason.corns@classmates.com>",
+    "licence": "Internal; Closed.",
+    "version": "0.4.0",
+    "main": "lib/barry",
+    "repository": "http://git.corp.sea1.cmates.com/git/?p=site-node-modules.git",
+    "keywords": [
+        "barry",
+        "classmates",
+        "feature",
+        "flip",
+        "toggle",
+        "feature flipping",
+        "feature toggling",
+        "continuous integration"
+    ]
+}
