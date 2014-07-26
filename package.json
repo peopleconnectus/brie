@@ -15,5 +15,13 @@
         "feature flipping",
         "feature toggling",
         "continuous integration"
-    ]
+    ],
+    "dependencies": {
+        "fflip": ">1.0.0"
+    },
+    "readmeFilename": "README.md",
+    "bugs": {
+        "url": "http://jiraprod.sea.corp.int.untd.com:8080/"
+    },
+    "homepage": "http://dpl"
 }
