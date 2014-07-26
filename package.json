@@ -4,6 +4,7 @@
     "author": "Jason Corns <jason.corns@classmates.com>",
     "licence": "Internal; Closed.",
     "version": "0.4.0",
+    "private": "true",
     "main": "lib/barry",
     "repository": "http://git.corp.sea1.cmates.com/git/?p=site-node-modules.git",
     "keywords": [
