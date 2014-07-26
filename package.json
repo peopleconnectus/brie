@@ -22,7 +22,6 @@
     ],
     "dependencies": {
         "fflip": ">1.0.0",
-        "rsvp": "~3.0.3",
         "lodash-node": "2.4.1"
     },
     "readmeFilename": "README.md",
