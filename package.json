@@ -3,7 +3,7 @@
     "description": "Classmates internal iteration of a Business Rules Engine",
     "author": "Jason Corns <jason.corns@classmates.com>",
     "licence": "Internal; Closed.",
-    "version": "0.5.1",
+    "version": "0.6.1",
     "private": "true",
     "main": "lib/barry",
     "repository": {
@@ -21,7 +21,6 @@
         "continuous integration"
     ],
     "dependencies": {
-        "fflip": ">1.0.0",
         "lodash-node": "2.4.1"
     },
     "readmeFilename": "README.md",
