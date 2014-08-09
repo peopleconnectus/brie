@@ -1,31 +1,34 @@
 {
-    "name": "barry",
-    "description": "Classmates internal iteration of a Business Rules Engine",
-    "author": "Jason Corns <jason.corns@classmates.com>",
-    "licence": "Internal; Closed.",
-    "version": "0.7.0",
-    "private": "true",
-    "main": "lib/barry",
-    "repository": {
-        "type": "git",
-        "url": "http://git.corp.sea1.cmates.com/git/?p=site-node-modules.git"
-    },
-    "keywords": [
-        "barry",
-        "classmates",
-        "feature",
-        "flip",
-        "toggle",
-        "feature flipping",
-        "feature toggling",
-        "continuous integration"
-    ],
-    "dependencies": {
-        "lodash-node": "2.4.1"
-    },
-    "readmeFilename": "README.md",
-    "bugs": {
-        "url": "http://jiraprod.sea.corp.int.untd.com:8080/"
-    },
-    "homepage": "http://dpl"
+  "name": "barry",
+  "description": "Classmates internal iteration of a Business Rules Engine",
+  "author": {
+    "name": "Jason Corns",
+    "email": "jason.corns@classmates.com"
+  },
+  "licence": "Internal; Closed.",
+  "version": "0.8.0",
+  "private": "true",
+  "main": "lib/barry",
+  "repository": {
+    "type": "git",
+    "url": "http://git.corp.sea1.cmates.com/git/?p=site-node-modules.git"
+  },
+  "keywords": [
+    "barry",
+    "classmates",
+    "feature",
+    "flip",
+    "toggle",
+    "feature flipping",
+    "feature toggling",
+    "continuous integration"
+  ],
+  "dependencies": {
+    "lodash-node": "2.4.1"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "http://jiraprod.sea.corp.int.untd.com:8080/"
+  },
+  "homepage": "http://dpl"
 }

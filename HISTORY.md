@@ -1,3 +1,8 @@
+0.8.0 / 2014-08-09
+==================
+ * JiraId: UI-1105 adds comparison mechanisms for number and string
+ * JiraId: UI-1105 converts Barry "has" method to use embedded comparison mechanisms
+
 0.7.0 / 2014-08-08
 ==================
  * JiraId: UI-1105 adjusts criteria validation to accept an array instead of singleton.  Bolsters engine processing to accurately calculate criteria arrays.
