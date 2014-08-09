@@ -1,3 +1,6 @@
+0.8.1 / 2014-08-09
+==================
+ * JiraId: UI-1105 minor correction in log output
 0.8.0 / 2014-08-09
 ==================
  * JiraId: UI-1105 adds comparison mechanisms for number and string
