@@ -1,4 +1,10 @@
-0.6.2 / 2014-08-06
+0.7.0 / 2014-08-08
+==================
+ * JiraId: UI-1105 adjusts criteria validation to accept an array instead of singleton.  Bolsters engine processing to accurately calculate criteria arrays.
+ * JiraId: UI-1105 accommodates criteriaLogic of "any" or "all", using the lodash "some" or "every" methods
+ 
+
+0.6.2 / 2014-08-07
 ==================
  * JiraId: UI-1105 requiring lodash-node instead of undefined "lodash"
 
