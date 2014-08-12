@@ -1,3 +1,10 @@
+0.8.2-0.8.6 / 2014-08-12
+========================
+ * JiraId: UI-1105 "above" and "below" comparison for object attempts to compare original object to extended object
+ * JiraId: UI-1105 adds new comparison for "object"
+ * JiraId: UI-1105 adds "above" and "below" for number
+ * JiraId: UI-1105 adds "above" and "below" for string
+
 0.8.1 / 2014-08-09
 ==================
  * JiraId: UI-1105 minor correction in log output
