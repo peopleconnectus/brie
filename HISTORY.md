@@ -1,3 +1,7 @@
+0.9.1 / 2014-08-18
+========================
+ * JiraId: UI-1105 Adds date comparisons for older/newer.
+
 0.8.7 / 2014-08-18
 ========================
  * JiraId: UI-1105 reverts string comparison for "above" and "below" to strict >= and <= evaluators.  Lexigraphic comparison may cause confusion but is, strictly speaking, the more-expected operation.
