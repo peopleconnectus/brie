@@ -1,3 +1,7 @@
+0.8.7 / 2014-08-18
+========================
+ * JiraId: UI-1105 reverts string comparison for "above" and "below" to strict >= and <= evaluators.  Lexigraphic comparison may cause confusion but is, strictly speaking, the more-expected operation.
+
 0.8.2-0.8.6 / 2014-08-12
 ========================
  * JiraId: UI-1105 "above" and "below" comparison for object attempts to compare original object to extended object
