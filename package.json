@@ -6,7 +6,7 @@
     "email": "jason.corns@classmates.com"
   },
   "licence": "Internal; Closed.",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "private": "true",
   "main": "lib/barry",
   "repository": {
