@@ -1,6 +1,10 @@
-0.9.2 / 2014-08-18
+0.9.3 / 2014-08-19
 ========================
- * JiraId: Includes a too-aggressive sting-to-date conversion gate, to capture non-object date values.  This leaves some room for improvement.
+ * JiraId: UI-1209 corrects un-handled typecheck in r_engine.  cannot call Object.keys on non-object types
+ 
+ 0.9.2 / 2014-08-18
+========================
+ * JiraId: UI-1105 Includes a too-aggressive sting-to-date conversion gate, to capture non-object date values.  This leaves some room for improvement.
  
  0.9.1 / 2014-08-18
 ========================
