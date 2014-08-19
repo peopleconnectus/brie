@@ -1,3 +1,7 @@
+0.10.1 / 2014-08-19
+========================
+ * JiraId: UI-1211 backs out of "extend" paradigm for overrides.
+
 0.10.0 / 2014-08-19
 ========================
  * JiraId: UI-1210 allows code to pass "overrides" property with arguments to allFeatures()
