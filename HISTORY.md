@@ -1,3 +1,7 @@
+0.10.0 / 2014-08-19
+========================
+ * JiraId: UI-1210 allows code to pass "overrides" property with arguments to allFeatures()
+
 0.9.3 / 2014-08-19
 ========================
  * JiraId: UI-1209 corrects un-handled typecheck in r_engine.  cannot call Object.keys on non-object types
