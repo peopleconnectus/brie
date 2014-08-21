@@ -1,3 +1,7 @@
+0.10.2 / 2014-08-19
+========================
+ * JiraId: UI-1218 lodash "isEqual" check for empty arrays of criteria response; returns (bool) false by default.
+
 0.10.1 / 2014-08-19
 ========================
  * JiraId: UI-1211 backs out of "extend" paradigm for overrides.
