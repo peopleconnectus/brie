@@ -1,3 +1,7 @@
+0.10.6 / 2014-08-22
+========================
+ * JiraId: UI-1206 date needs an "equality"  
+
 0.10.5 / 2014-08-22
 ========================
  * JiraId: UI-1206 number needs an "equality"  
