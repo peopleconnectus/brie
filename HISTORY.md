@@ -1,3 +1,7 @@
+0.10.3 / 2014-08-19
+========================
+ * JiraId: UI-1219 creates blank versions of data concern based on pristine source, then extends a clone.
+
 0.10.2 / 2014-08-19
 ========================
  * JiraId: UI-1218 string values not being converted to boolean; introduces booleanify method for overrides
