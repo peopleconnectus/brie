@@ -1,3 +1,7 @@
+0.10.5 / 2014-08-22
+========================
+ * JiraId: UI-1206 number needs an "equality"  
+
 0.10.4 / 2014-08-22
 ========================
  * JiraId: UI-1206 method name change; not all data blocks are "user", so not all ID matches are on UserId 
