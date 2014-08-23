@@ -1,8 +1,8 @@
 0.10.8 / 2014-08-22
 ========================
  * JiraId: UI-1206 corrects "check" method exception; 
- * JiraId: evaluates feature criteriaLogic; 
- * JiraId: moves feature evaluator setup to barry setup method.
+ * JiraId: UI-1206 evaluates feature criteriaLogic; 
+ * JiraId: UI-1206 moves feature evaluator setup to barry setup method.
 
 0.10.7 / 2014-08-22
 ========================
