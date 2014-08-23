@@ -1,3 +1,7 @@
+0.10.7 / 2014-08-22
+========================
+ * JiraId: UI-1206 modification in percentScale  
+
 0.10.6 / 2014-08-22
 ========================
  * JiraId: UI-1206 date needs an "equality"  
