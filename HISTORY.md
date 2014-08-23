@@ -1,3 +1,9 @@
+0.10.8 / 2014-08-22
+========================
+ * JiraId: UI-1206 corrects "check" method exception; 
+ * JiraId: evaluates feature criteriaLogic; 
+ * JiraId: moves feature evaluator setup to barry setup method.
+
 0.10.7 / 2014-08-22
 ========================
  * JiraId: UI-1206 modification in percentScale  
