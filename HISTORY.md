@@ -1,3 +1,7 @@
+0.11.0 / 2014-10-07
+========================
+ * JiraId: UI-1434 corrects bug with allowIDs that fails on strict equality; performs type conversion between string ID and numeric ID
+ 
 0.10.9 / 2014-09-02
 ========================
  * JiraId: UI-1240 corrects 0-check for percentMax values
