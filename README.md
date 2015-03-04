@@ -1,6 +1,6 @@
 This is barry
 =============
-This Business Rules Engine (B.R.E, or "barry") is a transient Feature Flipping Criteria System for Node, based on [fflip](https://github.com/FredKSchott/fflip).  
+This Business Rules Engine (B.R.E, or "barry") is a transient Feature Flipping Criteria System for Node, based on [fflip](https://github.com/FredKSchott/fflip).
 
 ```
 npm install git+ssh://gitolite@git.corp.sea1.cmates.com:site-node-modules.git#barry
@@ -27,11 +27,10 @@ var flags = barry.getAll();
 Criteria are the rules that __barry__ tests data against. __barry__ has a set of predefined Criteria. These criteria are not exposed to the caller, but are used internally to evaluate features.  Features (below) can reference these criteria names as success gates.  The response from a criteria method is *always* boolean.  __barry__ has:
 ```
  always(bool)           // asks barry to "always" respond with the given input.  Why?  Code consistency, mainly.
- isPaidUser(bool)       // accepts a boolean check value (isPaid===true or isPaid===false) 
  percentageScale(opts)  // opts = {percentMin:[0-1], percentMax:[0-1],salt:[number],testPhase:[string]}.  "testPhase" is used for logging and debugging only, and does not impact the algorithm.
                         // the data.id is used to calculate a percentage, modified by the salt value. If the resulting, salted number is within range, returns boolean::true; otherwise false.
  allowedUserIds(array)  // expects an array of 0 or more items. If data.id is in the array, boolean::true is returned; otherwise, false.
- 
+
 ```
 
 
@@ -53,7 +52,7 @@ var ExampleFeaturesObject = {
   newFeatureRollout: {
     name: "A New Feature Rollout",
     description: "Rollout of that new feature over the next month",
-    owner: "FredKSchott", // Remember: These are all optional, only criteria is required 
+    owner: "FredKSchott", // Remember: These are all optional, only criteria is required
     criteria: {
       isPaidUser: false,
       percentageOfUsers: 0.50

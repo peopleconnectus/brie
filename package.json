@@ -14,14 +14,14 @@
     "url": "http://git.corp.sea1.cmates.com/git/?p=site-node-modules.git"
   },
   "keywords": [
-    "barry",
     "classmates",
     "feature",
     "flip",
     "toggle",
     "feature flipping",
     "feature toggling",
-    "continuous integration"
+    "continuous integration",
+    "business rules engine"
   ],
   "dependencies": {
     "lodash-node": "2.4.1"
@@ -30,5 +30,8 @@
   "bugs": {
     "url": "http://jiraprod.sea.corp.int.untd.com:8080/"
   },
-  "homepage": "http://dpl"
+  "homepage": "http://dpl",
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  }
 }
