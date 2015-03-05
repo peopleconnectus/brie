@@ -18,17 +18,16 @@ describe('Diagnostics', function () {
     it('should return some value', function () {
       assert.ok(d);
     });
-    it('should have clean features', function () {
-      assert.deepEqual(d.features, {});
+    it('should read features', function () {
+      assert((typeof d.features === "object" && typeof d.features.length === "undefined"));
     });
-    it('should have clean data', function () {
-      assert.deepEqual(d.data, {});
+    it('should read data', function () {
+      assert((typeof d.data === "object" && typeof d.data.length === "undefined"));
     });
     it('should have criterion', function () {
       assert(!!(d));
     });
     describe('#criterion are executable', function () {
-      var d = barry.diagnostics();
       for (var c in d.criteria) {
         if (d.criteria.hasOwnProperty(c)) {
           (function (cta) {
@@ -55,7 +54,7 @@ describe('Execution', function () {
       "canCheckAlways": {
         "criteria": [
           {
-            "always": true
+            "always": false
           }
         ]
       },
@@ -64,7 +63,7 @@ describe('Execution', function () {
           {
             "has": {
               "trait": "hasStringValue",
-              "comparison": "equal",
+              "comparison": "equals",
               "value": "a string check value"
             }
           }
@@ -97,9 +96,141 @@ describe('Execution', function () {
           {
             "has": {
               "trait": "hasNumberValue",
-              "comparison": "below",
+              "comparison": "equals",
               "value": 181818
             }
+          }
+        ]
+      },
+      "canCheckHigherDate": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasDateValue",
+              "comparison": "older",
+              "value": new Date()
+            }
+          }
+        ]
+      },
+      "canCheckLowerDate": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasDateValue",
+              "comparison": "younger",
+              "value": new Date(2000, 1, 1, 1, 22, 0)
+            }
+          }
+        ]
+      },
+      "canCheckEqualDate": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasDateValue",
+              "comparison": "equal",
+              "value": new Date()
+            }
+          }
+        ]
+      },
+      "canCheckEqualObject": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasObjectValue",
+              "comparison": "equal",
+              "value": {a: 1, b: 2}
+            }
+          }
+        ]
+      },
+      "canCheckAboveObject": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasObjectValue",
+              "comparison": "above",
+              "value": {some: "string", other: 1234, last: "3o8jsf"}
+            }
+          }
+        ]
+      },
+      "canCheckBelowObject": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasObjectValue",
+              "comparison": "below",
+              "value": {some: "string", other: 1234, last: "3o8jsf"}
+            }
+          }
+        ]
+      },
+      "canCheckShorterObject": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasObjectValue",
+              "comparison": "shorter",
+              "value": {some: "string", other: 1234, last: "3o8jsf"}
+            }
+          }
+        ]
+      },
+      "canCheckLongerObject": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasObjectValue",
+              "comparison": "longer",
+              "value": {some: "string", other: 1234, last: "3o8jsf"}
+            }
+          }
+        ]
+      },
+      "canCheckComplexAll": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasNumberValue",
+              "comparison": "below",
+              "value": 5
+            }
+          },
+          {
+            "has": {
+              "trait": "hasStringValue",
+              "comparison": "equals",
+              "value": "a string check value"
+            }
+          }
+        ]
+      },
+      "canCheckComplexAny": {
+        "criteria": [
+          {
+            "has": {
+              "trait": "hasNumberValue",
+              "comparison": "below",
+              "value": 9999999
+            }
+          },
+          {
+            "has": {
+              "trait": "hasStringValue",
+              "comparison": "equals",
+              "value": "a string check value"
+            }
+          }
+        ],
+        "criteriaLogic": "any"
+      },
+      "canCheckAllowIds": {
+        "criteria": [
+          {
+            "allowIDs": [1234, 5678, 91011, 123456789]
           }
         ]
       }
@@ -115,22 +246,74 @@ describe('Execution', function () {
       assert(!!(bSetup));
     });
   });
-  describe('#setup', function () {
+  describe('#feature evaluation', function () {
+    var bSetup = barry.setup({
+      data: checkData,
+      features: features,
+      overrides: {},
+      showLogs: true
+    });
     it('should pass the "getAll" features', function () {
-      var bSetup = barry.setup({
-          data: checkData,
-          features: features,
-          overrides: {},
-          showLogs: false
-        }),
-        allOut = bSetup.getAll();
-      console.log('======================================== :: test');
-      console.log("(j.corns) allOut", allOut);
-      console.log('======================================== :: end test');
+      var allOut = bSetup.getAll();
       assert(!!(allOut));
-      describe('#boolean responses', function() {
-
-      });
+    });
+    for (var feature in features) {
+      if (features.hasOwnProperty(feature)) {
+        (function (f) {
+          it('feature "' + f + '" should evaluate to boolean', function () {
+            var getF = bSetup.get(f);
+            assert((typeof bSetup.get(f) === 'boolean'));
+          });
+        })(feature);
+      }
+    }
+    it('feature "canCheckAlways" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckAlways"));
+    });
+    it('feature "canCheckHasString" should evaluate to true', function () {
+      assert(bSetup.get("canCheckHasString"));
+    });
+    it('feature "canCheckHigherNumber" should evaluate to true', function () {
+      assert(bSetup.get("canCheckHigherNumber"));
+    });
+    it('feature "canCheckLowerNumber" should evaluate to true', function () {
+      assert(bSetup.get("canCheckLowerNumber"));
+    });
+    it('feature "canCheckEqualNumber" should evaluate to true', function () {
+      assert(bSetup.get("canCheckEqualNumber"));
+    });
+    it('feature "canCheckHigherDate" should evaluate to true', function () {
+      assert(bSetup.get("canCheckHigherDate"));
+    });
+    it('feature "canCheckLowerDate" should evaluate to true', function () {
+      assert(bSetup.get("canCheckLowerDate"));
+    });
+    it('feature "canCheckEqualDate" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckEqualDate"));
+    });
+    it('feature "canCheckEqualObject" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckEqualObject"));
+    });
+    it('feature "canCheckAboveObject" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckAboveObject"));
+    });
+    it('feature "canCheckBelowObject" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckBelowObject"));
+    });
+    it('feature "canCheckShorterObject" should evaluate to true', function () {
+      assert(bSetup.get("canCheckShorterObject"));
+    });
+    it('feature "canCheckLongerObject" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckLongerObject"));
+    });
+    it('feature "canCheckComplexAll" should evaluate to false', function () {
+      assert(!bSetup.get("canCheckComplexAll"));
+    });
+    it('feature "canCheckComplexAny" should evaluate to true', function () {
+      assert(bSetup.get("canCheckComplexAny"));
+    });
+    it('feature "canCheckAllowIds" should evaluate to true', function () {
+      assert(bSetup.get("canCheckAllowIds"));
     });
   });
 });
