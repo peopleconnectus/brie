@@ -6,7 +6,7 @@ This Business Rules Engine (B.R.E, or "barry") is a transient Feature Flipping C
 npm install git+ssh://gitolite@git.corp.sea1.cmates.com:site-node-modules.git#barry
 ```
 
-##Getting Started
+## Getting Started
 Below is a simple example that uses __barry__ to deliver feature flags based on a determined (set) of User Variant(s):
 ```javascript
 // Include barry
@@ -23,7 +23,7 @@ var flags = barry.getAll();
 // expect {feature1: true, feature2: false, ... }
 ```
 
-###Criteria
+### Criteria
 Criteria are the rules that __barry__ tests data against. __barry__ has a set of predefined Criteria. These criteria are not exposed to the caller, but are used internally to evaluate features.  Features (below) can reference these criteria names as success gates.  The response from a criteria method is *always* boolean.  __barry__ has:
 ```
  always(bool)           // asks barry to "always" respond with the given input.  Why?  Code consistency, mainly.
@@ -34,7 +34,7 @@ Criteria are the rules that __barry__ tests data against. __barry__ has a set of
 ```
 
 
-###Features
+### Features
 Features contain sets of criteria to test users against. The value associated with the criteria is passed in as the data argument of the criteria function. A user will have a featured enabled if they match all listed criteria, otherwise the feature is disabled. Features can include other optional properties for context. Features are described as follows:
 ```javascript
 var ExampleFeaturesObject = {
@@ -61,7 +61,7 @@ var ExampleFeaturesObject = {
 }
 ```
 
-##Usage
+## Usage
 ```
 Object setup(options)         // barry needs to be initialized with a data object and a set of features.  Don't try to make barry do stuff without setting up first. That makes barry angry.
 Bool   get(string feature)    // asks barry if the feature is enabled.
