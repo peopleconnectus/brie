@@ -50,15 +50,30 @@ The most complex criteria mechanism, `has` will evaluate the data object (first 
 
 If the comparison object contains only `trait` then barry will evaluate the presence of the property on the data object.
 Possible comparisons are:
- * `numeric` equals - a *non-strict* equality check
- * `numeric` above (longer) - a *non-strict* greater-than-or-equal-to check
- * `numeric` below (shorter) - a *non-strict* less-than-or-equal-to check
- * `string` equals -
- * `string` like -
- * `string` below -
- * `string` above -
- * `string` longer -
- * `string` shorter -
+
+##### equals
+ * (`date`) - a **strict** equality check between base comparison date and check date.  If the check value is a number, then barry evaluates the difference between `now()` and the comparison date to be equal to the check value, in days (e.g. "0" implies "today").
+ * (`numeric`) - a **non-strict** equality check.
+ * (`string`) - a**strict**equality check that the comparison string is identical to the check value note that this is a case-sensitive check.  See "like", below.
+
+##### above
+ * (`date`) - [alias: "longer", "older"] checks to see that the comparison date is older than the check date.  If the check value is a number, barry checks to see that the comparison date is at least as old, in days, as the check value, compared to `now()` (e.g. "1" implies the date must be yesterday or older).
+ * (`numeric`) - [alias: "longer"] a greater-than-or-equal-to check that the comparison number is greater than the check value.
+ * (`string`) - performs a javascript string "greater-than-or-equal" comparison.  As a loosely-typed language, this could be anything, really.
+
+##### below
+ * (`date`) - [alias: "shorter", "younger"] checks to see that the comparison date is more recent than the check date.  If the check value is a number, barry checks to see that the comparison date is at least as new, in days, as the check value, compared to `now()` (e.g. "1" implies the date must be tomorrow or younger).
+ * (`numeric`) - [alias: "shorter"] a less-than-or-equal-to check that the comparison number is smaller than the check value.
+ * (`string`) - performs a javascript string "less-than-or-equal" comparison.  As a loosely-typed language, this could be anything, really.
+
+##### like
+ * (`string`) - a **non-strict** check that the `toLowerCase()` comparison string is equal to the `toString().toLowerCase()` check value.
+
+##### longer
+ * (`string`) - true if the length of the comparison string (non-trimmed) is greater than or equal to the length of the check value (non-trimmed).
+
+##### shorter
+ * (`string`) - true if the length of the comparison string (non-trimmed) is less than or equal to the length of the check value (non-trimmed).
 
 
 ### Features
