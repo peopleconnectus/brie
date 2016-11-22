@@ -20,7 +20,7 @@ barry.setup(
   }
 );
 var flags = barry.getAll();
-// expect {feature1: true, feature2: false, ... }
+// expect {feature1: true, feature2: false, ... } from get() or getAll()
 ```
 
 ### Criteria
@@ -45,7 +45,7 @@ Criteria are the predefined rule types that __barry__ tests data against, per fe
     ],
     criteriaLogic: "any"
   };
-// expect {multiPartTestCase: true}
+// expect {multiPartTestCase: true} from get() and getAll()
 ```
 
 
