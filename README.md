@@ -1,6 +1,6 @@
 This is barry
 =============
-This Business Rules Engine (B.R.E, or "barry") is a transient Feature Flipping Criteria System for Node, based on [fflip](https://github.com/FredKSchott/fflip).
+This Business Rules Engine (B.R.E, or "barry") is a transient Feature Flipping Criteria System for Node.
 
 ```
 npm install ssh://git@bitbucket01.corp.sea1.cmates.com:7999/siteui/barry.git
