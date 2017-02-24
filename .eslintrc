@@ -1,0 +1,15 @@
+{
+    "rules": {
+        "no-console": 0
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "modules": true
+        },
+        "sourceType": "module"
+    },
+    "env": {
+        "node": true,
+        "es6": true
+    }
+}

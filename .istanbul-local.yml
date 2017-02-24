@@ -1,0 +1,9 @@
+reporting:
+    instrumentation:
+        preserve-comments: false
+        complete-copy: false
+        save-baseline: false
+    print: summary
+    reports:
+        - lcov
+

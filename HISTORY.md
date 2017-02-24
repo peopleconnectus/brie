@@ -1,32 +1,37 @@
+0.13.0 / 2017-02-17
+ * added "test" command to scripts
+ * JiraId: UI-12235 updates lodash dependency from lodash-node to lodash@4.0.0
+ * JiraId: UI-12235 updates mocha dependency to 3.2.0-compatible
+
 0.11.0 / 2014-10-07
 ========================
  * JiraId: UI-1434 corrects bug with allowIDs that fails on strict equality; performs type conversion between string ID and numeric ID
- 
+
 0.10.9 / 2014-09-02
 ========================
  * JiraId: UI-1240 corrects 0-check for percentMax values
- 
+
 0.10.8 / 2014-08-22
 ========================
- * JiraId: UI-1206 corrects "check" method exception; 
- * JiraId: UI-1206 evaluates feature criteriaLogic; 
+ * JiraId: UI-1206 corrects "check" method exception;
+ * JiraId: UI-1206 evaluates feature criteriaLogic;
  * JiraId: UI-1206 moves feature evaluator setup to barry setup method.
 
 0.10.7 / 2014-08-22
 ========================
- * JiraId: UI-1206 modification in percentScale  
+ * JiraId: UI-1206 modification in percentScale
 
 0.10.6 / 2014-08-22
 ========================
- * JiraId: UI-1206 date needs an "equality"  
+ * JiraId: UI-1206 date needs an "equality"
 
 0.10.5 / 2014-08-22
 ========================
- * JiraId: UI-1206 number needs an "equality"  
+ * JiraId: UI-1206 number needs an "equality"
 
 0.10.4 / 2014-08-22
 ========================
- * JiraId: UI-1206 method name change; not all data blocks are "user", so not all ID matches are on UserId 
+ * JiraId: UI-1206 method name change; not all data blocks are "user", so not all ID matches are on UserId
 
 0.10.3 / 2014-08-19
 ========================
@@ -48,11 +53,11 @@
 0.9.3 / 2014-08-19
 ========================
  * JiraId: UI-1209 corrects un-handled typecheck in r_engine.  cannot call Object.keys on non-object types
- 
+
  0.9.2 / 2014-08-18
 ========================
  * JiraId: UI-1105 Includes a too-aggressive sting-to-date conversion gate, to capture non-object date values.  This leaves some room for improvement.
- 
+
  0.9.1 / 2014-08-18
 ========================
  * JiraId: UI-1105 Adds date comparisons for older/newer.
@@ -71,7 +76,7 @@
 0.8.1 / 2014-08-09
 ==================
  * JiraId: UI-1105 minor correction in log output
- 
+
 0.8.0 / 2014-08-09
 ==================
  * JiraId: UI-1105 adds comparison mechanisms for number and string
@@ -81,7 +86,7 @@
 ==================
  * JiraId: UI-1105 adjusts criteria validation to accept an array instead of singleton.  Bolsters engine processing to accurately calculate criteria arrays.
  * JiraId: UI-1105 accommodates criteriaLogic of "any" or "all", using the lodash "some" or "every" methods
- 
+
 
 0.6.2 / 2014-08-07
 ==================
