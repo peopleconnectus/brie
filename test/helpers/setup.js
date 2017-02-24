@@ -41,11 +41,34 @@ module.exports = function () {
       });
       assert(bSetup.get("invalidFeature"));
     });
-    it.only('should return false for missing criteria', function () {
+    it('accepts missing criteria', function () {
       var bSetup = barry.setup({
         data: this.checkData,
         features: {
-          "ignoresMissingCriteria": {"criteria": [{}]}
+          "acceptsMissingCrits": {
+          }
+        },
+        overrides: {},
+        showLogs: false
+      });
+      assert(!bSetup.get('acceptsMissingCrits'));
+    });
+    it('should return false for simple criteria', function () {
+      var bSetup = barry.setup({
+        data: this.checkData,
+        features: {
+          "ignoresMissingCriteria": { "criteria": ["string"] }
+        },
+        overrides: {},
+        showLogs: false
+      });
+      assert(bSetup.getAll());
+    });
+    it('should return false for missing criteria', function () {
+      var bSetup = barry.setup({
+        data: this.checkData,
+        features: {
+          "ignoresMissingCriteria": { "criteria": [{}] }
         },
         overrides: {},
         showLogs: false
@@ -59,7 +82,7 @@ module.exports = function () {
         overrides: {},
         showLogs: true
       });
-      assert(!!(bSetup));
+      assert(bSetup.log('it will write logs'));
     });
     it('accepts missing features', function () {
       var bSetup = barry.setup({
@@ -75,7 +98,7 @@ module.exports = function () {
         features: {},
         showLogs: false
       });
-      assert(!!(bSetup));
+      assert(bSetup.getAll());
     });
     it('accepts missing data', function () {
       var bSetup = barry.setup({

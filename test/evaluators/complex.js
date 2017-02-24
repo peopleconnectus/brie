@@ -56,6 +56,25 @@ module.exports = function () {
           ],
           "criteriaLogic": "any"
         },
+        "canCheckSimpleAny": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasNumberValue",
+                "comparison": "below",
+                "value": 9999999
+              }
+            },
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "equals",
+                "value": "a string check value"
+              }
+            }
+          ],
+          "criteriaLogic": "any"
+        },
         // "for-ids" check
         "canCheckAllowIds": {
           "criteria": [
@@ -168,12 +187,23 @@ module.exports = function () {
               }
             }
           ]
+        },
+        "fullCheckWithOverrides": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "equals",
+                "value": "a string check value"
+              }
+            }
+          ]
         }
       };
       this.bSetup = barry.setup({
         data: this.checkData,
         features: this.features,
-        overrides: {},
+        overrides: {"fullCheckWithOverrides" : false},
         showLogs: false
       });
 
@@ -183,7 +213,13 @@ module.exports = function () {
       assert(!this.bSetup.get("canCheckComplexAll"));
     });
     it('"canCheckComplexAny" should evaluate to true', function () {
-      assert(this.bSetup.get("canCheckComplexAny"));
+      assert(this.bSetup.getAll());
+    });
+    it('"canCheckSimpleAny" should evaluate to true', function () {
+      assert(this.bSetup.get('canCheckSimpleAny'));
+    });
+    it('"fullCheckWithOverrides" should evaluate to false', function () {
+      assert(!this.bSetup.getAll()['fullCheckWithOverrides']);
     });
     it('"canCheckAllowIds" should evaluate to true', function () {
       assert(this.bSetup.get("canCheckAllowIds"));
