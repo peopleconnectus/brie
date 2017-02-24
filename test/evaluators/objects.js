@@ -5,7 +5,6 @@
 var assert = require("assert");
 var barry = require('../../lib/barry');
 module.exports = function () {
-
   describe('#object evaluation', function () {
     before(function () {
 
@@ -15,102 +14,231 @@ module.exports = function () {
         hasNumberValue: 181818,
         hasObjectValue: { a: 1, b: 2 },
         hasDateValue: new Date(),
-        hasBooleanValue: true
+        hasBooleanValue: true,
+        hasSimpleArray: [1, 2, 3]
       };
-      this.features = {
-        // object comparator
-        "canCheckEqualObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "equal",
-                "value": { a: 1, b: 2 }
+    });
+    describe('#objects', function () {
+      before(function () {
+        var features = {
+          // object comparator
+          "canCheckEqualObject": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "equal",
+                  "value": { a: 1, b: 2 }
+                }
               }
-            }
-          ]
-        },
-        "canCheckAboveObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "above",
-                "value": { some: "string", other: 1234, last: "3o8jsf" }
+            ]
+          },
+          "canCheckAboveObject": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "above",
+                  "value": { some: "string", other: 1234, last: "3o8jsf" }
+                }
               }
-            }
-          ]
-        },
-        "canCheckAboveEqualObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "above",
-                "value": { a: 1, b: 2 }
+            ]
+          },
+          "canCheckAboveObjectMixed": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "above",
+                  "value": ["a", "b"]
+                }
               }
-            }
-          ]
-        },
-        "canCheckBelowObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "below",
-                "value": { some: "string", other: 1234, last: "3o8jsf" }
+            ]
+          },
+          "canCheckAboveObjectEqual": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "above",
+                  "value": { a: 1, b: 2 }
+                }
               }
-            }
-          ]
-        },
-        "canCheckShorterObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "shorter",
-                "value": { some: "string", other: 1234, last: "3o8jsf" }
+            ]
+          },
+          "canCheckBelowObject": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "below",
+                  "value": { some: "string", other: 1234, last: "3o8jsf" }
+                }
               }
-            }
-          ]
-        },
-        "canCheckLongerObject": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "hasObjectValue",
-                "comparison": "longer",
-                "value": { some: "string", other: 1234, last: "3o8jsf" }
+            ]
+          },
+          "canCheckBelowObjectEqual": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "below",
+                  "value": { a: 1, b: 2 }
+                }
               }
-            }
-          ]
-        }
-      };
-      this.bSetup = barry.setup({
-        data: this.checkData,
-        features: this.features,
-        overrides: {},
-        showLogs: false
+            ]
+          },
+          "canCheckBelowObjectMixed": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "below",
+                  "value": ["a", "b"]
+                }
+              }
+            ]
+          },
+          "canCheckShorterObject": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "shorter",
+                  "value": { some: "string", other: 1234, last: "3o8jsf" }
+                }
+              }
+            ]
+          },
+          "canCheckLongerObject": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasObjectValue",
+                  "comparison": "longer",
+                  "value": { some: "string", other: 1234, last: "3o8jsf" }
+                }
+              }
+            ]
+          }
+        };
+        this.bSetup = barry.setup({
+          data: this.checkData,
+          features: features,
+          overrides: {},
+          showLogs: false
+        });
       });
-    });
+      it('"canCheckEqualObject" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckEqualObject"));
+      });
+      it('"canCheckAboveObject" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckAboveObject"));
+      });
+      it('"canCheckAboveObjectEqual" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckAboveObjectEqual"));
+      });
+      it('"canCheckAboveObjectMixed" should evaluate to true', function () {
+        assert(!this.bSetup.get("canCheckAboveObjectMixed"));
+      });
+      it('"canCheckBelowObject" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckBelowObject"));
+      });
+      it('"canCheckBelowObjectEqual" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckBelowObjectEqual"));
+      });
+      it('"canCheckBelowObjectMixed" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckBelowObjectMixed"));
+      });
+      it('"canCheckShorterObject" should evaluate to true', function () {
+        assert(this.bSetup.get("canCheckShorterObject"));
+      });
+      it('"canCheckLongerObject" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckLongerObject"));
+      });
 
-    it('"canCheckEqualObject" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckEqualObject"));
     });
-    it('"canCheckAboveObject" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckAboveObject"));
-    });
-    it('"canCheckAboveObject" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckAboveEqualObject"));
-    });
-    it('"canCheckBelowObject" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckBelowObject"));
-    });
-    it('"canCheckShorterObject" should evaluate to true', function () {
-      assert(this.bSetup.get("canCheckShorterObject"));
-    });
-    it('"canCheckLongerObject" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckLongerObject"));
+    describe('#arrays', function () {
+      before(function () {
+        var features = {
+          "canCheckEqualArray": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasSimpleArray",
+                  "comparison": "equal",
+                  "value": [1, 2, 3]
+                }
+              }
+            ]
+          },
+          "canCheckAboveArray": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasSimpleArray",
+                  "comparison": "above",
+                  "value": [7, 8]
+                }
+              }
+            ]
+          },
+          "canCheckAboveArrayMixed": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasSimpleArray",
+                  "comparison": "above",
+                  "value": { "a": "z", "b": "y" }
+                }
+              }
+            ]
+          },
+          "canCheckBelowArray": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasSimpleArray",
+                  "comparison": "below",
+                  "value": [5, 6, 7, 8, 9]
+                }
+              }
+            ]
+          },
+          "canCheckBelowArrayMixed": {
+            "criteria": [
+              {
+                "has": {
+                  "trait": "hasSimpleArray",
+                  "comparison": "below",
+                  "value": { "a": "z", "b": "y" }
+                }
+              }
+            ]
+          }
+        };
+        this.bSetup = barry.setup({
+          data: this.checkData,
+          features: features,
+          overrides: {},
+          showLogs: false
+        });
+      });
+      it('"canCheckEqualArray" should evaluate to true', function () {
+        assert(!this.bSetup.get("canCheckEqualArray"));
+      });
+      it('"canCheckAboveArray" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckAboveArray"));
+      });
+      it('"canCheckAboveArrayMixed" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckAboveArrayMixed"));
+      });
+      it('"canCheckBelowArray" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckBelowArray"));
+      });
+      it('"canCheckBelowArrayMixed" should evaluate to false', function () {
+        assert(!this.bSetup.get("canCheckBelowArrayMixed"));
+      });
     });
   });
 };
