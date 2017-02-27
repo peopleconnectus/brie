@@ -24,7 +24,7 @@
     "business rules engine"
   ],
   "dependencies": {
-    "lodash": "4.0.0"
+    "lodash": "4.15.0"
   },
   "readmeFilename": "README.md",
   "bugs": {
