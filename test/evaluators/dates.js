@@ -1,23 +1,58 @@
 /**
  * Created by j.corns on 2/22/17.
  */
-
 var assert = require("assert");
 var barry = require('../../lib/barry');
 module.exports = function () {
 
   describe('#date evaluation', function () {
     before(function () {
+      this.staticDate = new Date();
+      this.pastDate = new Date(this.staticDate-604800000);
       this.checkData = {
         id: 123456789,
         hasStringValue: "a string check value",
         hasNumberValue: 181818,
         hasObjectValue: { a: 1, b: 2 },
-        hasDateValue: new Date(),
+        hasDateValue: this.staticDate,
+        hasOldDate: this.pastDate,
         hasBooleanValue: true
       };
       this.features = {
         // date comparator
+        "canCheckEqualDate": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasDateValue",
+                "comparison": "equals",
+                "value": this.staticDate
+              }
+            }
+          ]
+        },
+        "canCheckEqualDateNumber": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasDateValue",
+                "comparison": "equals",
+                "value": 949396920000
+              }
+            }
+          ]
+        },
+        "canCheckEqualDateString": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasDateValue",
+                "comparison": "equals",
+                "value": "any non-numeric string"
+              }
+            }
+          ]
+        },
         "canCheckHigherDate": {
           "criteria": [
             {
@@ -25,6 +60,28 @@ module.exports = function () {
                 "trait": "hasDateValue",
                 "comparison": "older",
                 "value": new Date()
+              }
+            }
+          ]
+        },
+        "canCheckHigherDateNumber": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasDateValue",
+                "comparison": "older",
+                "value": 0.000000011574074074074073 // decimal representation of 1 millisecond.
+              }
+            }
+          ]
+        },
+        "canCheckHigherDateString": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasDateValue",
+                "comparison": "older",
+                "value": "any non-numeric string"
               }
             }
           ]
@@ -40,13 +97,24 @@ module.exports = function () {
             }
           ]
         },
-        "canCheckEqualDate": {
+        "canCheckLowerDateNumber": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasOldDate",
+                "comparison": "younger",
+                "value": 10
+              }
+            }
+          ]
+        },
+        "canCheckLowerDateString": {
           "criteria": [
             {
               "has": {
                 "trait": "hasDateValue",
-                "comparison": "equal",
-                "value": new Date()
+                "comparison": "younger",
+                "value": "any non-numerica string"
               }
             }
           ]
@@ -59,16 +127,32 @@ module.exports = function () {
         showLogs: false
       });
     });
-
-
-    it('"canCheckHigherDate" should evaluate to true', function () {
+    it('Date equality comparison', function () {
+      assert(this.bSetup.get("canCheckEqualDate"));
+    });
+    it('Date equality comparison against a number', function () {
+      assert(!this.bSetup.get("canCheckEqualDateNumber"));
+    });
+    it('Date equality comparison against string', function () {
+      assert(!this.bSetup.get("canCheckEqualDateString"));
+    });
+    it('Date difference comparison (older)', function () {
       assert(this.bSetup.get("canCheckHigherDate"));
     });
-    it('"canCheckLowerDate" should evaluate to true', function () {
+    it('Date difference comparison against a number (older)', function () {
+      assert(this.bSetup.get("canCheckHigherDateNumber"));
+    });
+    it('Date equality comparison against string (older)', function () {
+      assert(!this.bSetup.get("canCheckHigherDateString"));
+    });
+    it('Date difference comparison (younger)', function () {
       assert(this.bSetup.get("canCheckLowerDate"));
     });
-    it('"canCheckEqualDate" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckEqualDate"));
+    it('Date difference comparison against a number (younger)', function () {
+      assert(this.bSetup.get("canCheckLowerDateNumber"));
+    });
+    it('Date difference comparison against string (younger)', function () {
+      assert(!this.bSetup.get("canCheckLowerDateString"));
     });
   });
 };
