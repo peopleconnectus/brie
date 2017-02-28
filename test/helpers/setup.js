@@ -41,6 +41,32 @@ module.exports = function () {
       });
       assert(bSetup.get("invalidFeature"));
     });
+    it('should handle disabled features', function () {
+
+      var bSetup = barry.setup({
+        data: this.checkData,
+        features: {
+          // always evaluator
+          "canCheckAlways": {
+            "criteria": [
+              {
+                "always": false
+              }
+            ]
+          },
+          "canCheckAnother": {
+            "enabled": false,
+            "criteria": [
+              {
+                "always": true
+              }
+            ]
+          }
+        },
+        overrides: {}
+      });
+      assert(bSetup.getAll());
+    });
     it('accepts missing criteria', function () {
       var bSetup = barry.setup({
         data: this.checkData,
@@ -74,15 +100,6 @@ module.exports = function () {
         showLogs: false
       });
       assert(bSetup.getAll());
-    });
-    it('will write logs', function () {
-      var bSetup = barry.setup({
-        data: this.checkData,
-        features: {},
-        overrides: {},
-        showLogs: true
-      });
-      assert(bSetup.log('it will write logs'));
     });
     it('accepts missing features', function () {
       var bSetup = barry.setup({
