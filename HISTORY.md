@@ -1,4 +1,17 @@
+2.0.0 / 2017-03-01
+========================
+ * prep for npm publish
+ * rename "barry" to "brie"
+ * package.json updates for public module
+
+1.0.0 / 2017-02-28
+========================
+ * added "type" check as "is"
+ * Full test suite
+ * Full test coverage
+
 0.13.0 / 2017-02-17
+========================
  * added "test" command to scripts
  * JiraId: UI-12235 updates lodash dependency from lodash-node to lodash@4.0.0
  * JiraId: UI-12235 updates mocha dependency to 3.2.0-compatible

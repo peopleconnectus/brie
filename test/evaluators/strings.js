@@ -3,7 +3,7 @@
  */
 
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
   describe('#string evaluation', function () {
     before(function () {
@@ -155,7 +155,7 @@ module.exports = function () {
             ]
           }
         };
-      this.bSetup = barry.setup({
+      this.bSetup = brie.setup({
         data: checkData,
         features: features,
         overrides: {},

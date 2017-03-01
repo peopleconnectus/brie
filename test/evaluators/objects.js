@@ -3,7 +3,7 @@
  */
 
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
   describe('#object evaluation', function () {
     before(function () {
@@ -122,7 +122,7 @@ module.exports = function () {
             ]
           }
         };
-        this.bSetup = barry.setup({
+        this.bSetup = brie.setup({
           data: this.checkData,
           features: features,
           overrides: {},
@@ -217,7 +217,7 @@ module.exports = function () {
             ]
           }
         };
-        this.bSetup = barry.setup({
+        this.bSetup = brie.setup({
           data: this.checkData,
           features: features,
           overrides: {},

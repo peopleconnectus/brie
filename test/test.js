@@ -1,5 +1,5 @@
 /**
- * Testing Harness for Barry
+ * Testing Harness for brie
  *
  * Run as:
  *

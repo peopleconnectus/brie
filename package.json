@@ -1,5 +1,5 @@
 {
-  "name": "barry",
+  "name": "brie",
   "description": "Classmates internal iteration of a Business Rules Engine",
   "author": {
     "name": "Jason Corns",
@@ -8,20 +8,24 @@
   "licence": "Internal; Closed.",
   "version": "1.0.0",
   "private": true,
-  "main": "lib/barry",
+  "main": "lib/brie",
   "repository": {
     "type": "git",
-    "url": "bitbucket01.corp.sea1.cmates.com:7999/siteui/barry.git"
+    "url": "bitbucket01.corp.sea1.cmates.com:7999/siteui/brie.git"
   },
   "keywords": [
-    "classmates",
     "feature",
     "flip",
     "toggle",
     "feature flipping",
     "feature toggling",
     "continuous integration",
-    "business rules engine"
+    "business rules engine",
+    "business rules management system",
+    "B.R.E.",
+    "B.R.M.S",
+    "BRE",
+    "BRMS"
   ],
   "dependencies": {
     "lodash": "4.15.0",
@@ -39,8 +43,6 @@
   },
   "scripts": {
     "test": "node node_modules/.bin/mocha",
-    "bamboo": "node node_modules/mocha/bin/mocha -R mocha-bamboo-reporter",
-    "cover": "node node_modules/.bin/istanbul cover _mocha -- -R mocha-bamboo-reporter",
-    "bamboo-cover": "node node_modules/.bin/istanbul cover --config=.istanbul-bamboo.yml _mocha -- test/test.js --reporter=mocha-bamboo-reporter"
+    "cover": "node node_modules/.bin/istanbul cover _mocha -- -R mocha-bamboo-reporter"
   }
 }

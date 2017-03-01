@@ -3,7 +3,7 @@
  */
 
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
   describe('#complex evaluation', function () {
     before(function () {
@@ -200,7 +200,7 @@ module.exports = function () {
           ]
         }
       };
-      this.bSetup = barry.setup({
+      this.bSetup = brie.setup({
         data: this.checkData,
         features: this.features,
         overrides: {"fullCheckWithOverrides" : false},

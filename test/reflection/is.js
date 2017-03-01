@@ -3,7 +3,7 @@
  */
 
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#is and type-check', function () {
@@ -93,7 +93,7 @@ module.exports = function () {
             ]
           }
         };
-      this.bSetup = barry.setup({
+      this.bSetup = brie.setup({
         data: checkData,
         features: features
       });

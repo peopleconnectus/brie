@@ -1,10 +1,10 @@
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
   describe('Diagnostics', function () {
     describe('#exist', function () {
       before(function () {
-        this.d = barry.diagnostics();
+        this.d = brie.diagnostics();
       });
       it('should return some value', function () {
         assert.ok(this.d);
@@ -45,7 +45,7 @@ module.exports = function () {
     });
 
     describe('#criteria are executable', function () {
-      var t_d = barry.diagnostics();
+      var t_d = brie.diagnostics();
       for (var c in t_d.criteria) {
         if (t_d.criteria.hasOwnProperty(c)) {
           (function (cta) {

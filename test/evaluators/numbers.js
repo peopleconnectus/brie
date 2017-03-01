@@ -2,7 +2,7 @@
  * Created by j.corns on 2/22/17.
  */
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#number evaluation', function () {
@@ -62,7 +62,7 @@ module.exports = function () {
           ]
         }
       };
-      this.bSetup = barry.setup({
+      this.bSetup = brie.setup({
         data: this.checkData,
         features: this.features,
         overrides: {},

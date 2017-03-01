@@ -3,13 +3,13 @@
  */
 
 var assert = require("assert");
-var barry = require('../../lib/barry');
+var brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#simple evaluation', function () {
     before(function () {
 
-      this.checkData = {
+      var checkData = {
         id: 123456789,
         hasStringValue: "a string check value",
         hasNumberValue: 181818,
@@ -17,7 +17,7 @@ module.exports = function () {
         hasDateValue: new Date(),
         hasBooleanValue: true
       };
-      this.features = {
+      var features = {
         // always evaluator
         "canCheckAlways": {
           "criteria": [
@@ -45,9 +45,9 @@ module.exports = function () {
           ]
         }
       };
-      this.bSetup = barry.setup({
-        data: this.checkData,
-        features: this.features,
+      this.bSetup = brie.setup({
+        data: checkData,
+        features: features,
         overrides: {},
         showLogs: false
       });
@@ -56,7 +56,6 @@ module.exports = function () {
       if (this.features.hasOwnProperty(feature)) {
         (function (f) {
           it('"' + f + '" should evaluate to boolean', function () {
-            var getF = this.bSetup.get(f);
             assert((typeof this.bSetup.get(f) === 'boolean'));
           });
         })(feature);
