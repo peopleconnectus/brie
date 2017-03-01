@@ -6,7 +6,7 @@
     "email": "jason.corns@classmates.com"
   },
   "licence": "Internal; Closed.",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "main": "lib/brie",
   "repository": {
