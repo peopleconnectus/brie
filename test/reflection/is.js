@@ -14,7 +14,14 @@ module.exports = function () {
           hasNumberValue: 181818,
           hasObjectValue: { a: 1, b: 2 },
           hasDateValue: new Date(),
-          hasBooleanValue: true
+          hasBooleanValue: true,
+          has: {
+            nested: {
+              values: {
+                props: "some value"
+              }
+            }
+          }
         },
         features = {
           // type evaluator
@@ -74,6 +81,16 @@ module.exports = function () {
                 }
               }
             ]
+          },
+          "canCheckNestedTraits": {
+            "criteria": [
+              {
+                "is": {
+                  "type": "string",
+                  "trait": "has.nested.values.props"
+                }
+              }
+            ]
           }
         };
       this.bSetup = barry.setup({
@@ -99,5 +116,8 @@ module.exports = function () {
     it('will reject an empty "is" block', function () {
       assert(!this.bSetup.get("canCheckEmptyIs"));
     });
+    it('will test nested properties by dot notation', function () {
+      assert(this.bSetup.get("canCheckNestedTraits"));
+    })
   });
 };

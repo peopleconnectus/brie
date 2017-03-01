@@ -55,7 +55,7 @@ __barry__ has:
 #### allowIDs (object, array)
 Provided an object containing an "id" property, barry evaluates the presence of the id in the given array, checking for 1 or more entries.
 
-#### always(object, bool)
+#### always (object, bool)
 `Always` asks barry to "always" respond with the given input.  Why?  Code consistency, mainly.
 
 #### percentScale(object, opts)
@@ -123,9 +123,26 @@ Possible comparisons are:
  * (`object`) - true if the [_.size()](https://lodash.com/docs#size) of the data object is less than that of the comparison object.
  * (`string`) - true if the length of the comparison string (non-trimmed) is less than or equal to the length of the check value (non-trimmed).
 
-#### Logic Chaining
-
-
+#### is (object (source), object (options))
+Tests if a key from a source object has property of a noted __type__.
+##### Options
+ * (`trait`) - JSON notation path reference for a key, presumed to exist in source data.  Checks source data using lodash [_.get()](https://lodash.com/docs/#get), and follows dot-path rules.
+ * (`type`) - string representing potential data type. String case is adjusted in the `is` method, but value must be one of:
+   * array
+   * boolean
+   * date (**NOTE:** a value like `Tue Feb 28 2017 20:42:48 GMT-0800 (PST)` is a _string_ type and not _date_.)
+   * empty
+   * finite
+   * function
+   * integer
+   * NaN
+   * nil
+   * null
+   * number
+   * object
+   * regex | regular_expression | regexp
+   * string
+   * undefined
 ### Features
 Features contain sets of criteria to test users against. The value associated with the criteria is passed in as the data argument of the criteria function. A user will have a featured enabled if they match all listed criteria, otherwise the feature is disabled. Features can include other optional properties for context. Features are described as follows:
 ```javascript
@@ -144,6 +161,16 @@ var ExampleFeaturesObject = {
           "trait": "hasStringValue",
           "comparison": "equals",
           "value": "a string check value"
+        }
+      }
+    ]
+  },
+  "canCheckType": {
+    "criteria": [
+      {
+        "is": {
+          "trait": "myData.nested.key",
+          "type": "number"
         }
       }
     ]
