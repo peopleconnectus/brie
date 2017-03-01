@@ -1,0 +1,48 @@
+{
+  "name": "brie",
+  "description": "Business Rules Integration Engine (brie).  Node module for managing business rules, feature flags, and decision logic",
+  "author": {
+    "name": "Jason Corns",
+    "email": "jason.corns@peopleconnect.us"
+  },
+  "licence": "Internal; Closed.",
+  "version": "2.0.2",
+  "private": true,
+  "main": "lib/brie",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peopleconnectus/brie"
+  },
+  "keywords": [
+    "feature",
+    "flip",
+    "toggle",
+    "feature flipping",
+    "feature toggling",
+    "continuous integration",
+    "business rules engine",
+    "business rules management system",
+    "B.R.E.",
+    "B.R.M.S",
+    "BRE",
+    "BRMS"
+  ],
+  "dependencies": {
+    "lodash": "4.15.0",
+    "debug": "2.6.0"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/peopleconnectus/brie/issues"
+  },
+  "devDependencies": {
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0",
+    "mocha-bamboo-reporter": "^1.1.1",
+    "mocha-eslint": "^3.0.1"
+  },
+  "scripts": {
+    "test": "node node_modules/.bin/mocha",
+    "cover": "node node_modules/.bin/istanbul cover _mocha -- -R mocha-bamboo-reporter"
+  }
+}
