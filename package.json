@@ -6,7 +6,7 @@
     "email": "jason.corns@peopleconnect.us"
   },
   "licence": "Internal; Closed.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "main": "lib/brie",
   "repository": {
