@@ -1,9 +1,9 @@
 {
   "name": "brie",
-  "description": "Classmates internal iteration of a Business Rules Engine",
+  "description": "Business Rules Integration Engine (brie).  Node module for managing business rules, feature flags, and decision logic",
   "author": {
     "name": "Jason Corns",
-    "email": "jason.corns@classmates.com"
+    "email": "jason.corns@peopleconnect.us"
   },
   "licence": "Internal; Closed.",
   "version": "2.0.0",
@@ -11,7 +11,7 @@
   "main": "lib/brie",
   "repository": {
     "type": "git",
-    "url": "bitbucket01.corp.sea1.cmates.com:7999/siteui/brie.git"
+    "url": "https://github.com/peopleconnectus/brie"
   },
   "keywords": [
     "feature",
@@ -33,7 +33,7 @@
   },
   "readmeFilename": "README.md",
   "bugs": {
-    "url": "http://jiraprod:8080/"
+    "url": "https://github.com/peopleconnectus/brie/issues"
   },
   "devDependencies": {
     "istanbul": "^0.4.5",

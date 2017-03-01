@@ -1,9 +1,9 @@
 This is brie
 =============
-This Business Rules Engine (B.R.E, or "brie") is a transient Feature Flipping Criteria System for Node.
+This Business Rules Integration Engine (B.R.E, or "brie") is a transient Feature Flipping Criteria System for Node.
 
 ```
-npm install ssh://git@bitbucket01.corp.sea1.cmates.com:7999/siteui/brie.git
+npm install brie
 ```
 
 ## Getting Started
