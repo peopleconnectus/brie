@@ -140,7 +140,7 @@ Tests if a key from a source object has property of a noted __type__.
    * null
    * number
    * object
-   * regex | regular_expression | regexp
+   * regex \| regular_expression \| regexp
    * string
    * undefined
 ### Features
