@@ -15,7 +15,7 @@ module.exports = function () {
       it('should read data', function () {
         assert((typeof this.d.data === "object" && typeof this.d.data.length === "undefined"));
       });
-      it('should have criterion', function () {
+      it('should have criteria', function () {
         assert(!!(this.d));
       });
       it('recognizes data type: string', function () {
@@ -44,7 +44,7 @@ module.exports = function () {
       });
     });
 
-    describe('#criterion are executable', function () {
+    describe('#criteria are executable', function () {
       var t_d = barry.diagnostics();
       for (var c in t_d.criteria) {
         if (t_d.criteria.hasOwnProperty(c)) {

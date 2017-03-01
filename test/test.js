@@ -20,5 +20,5 @@ describe('Execution', function () {
   require('./evaluators/objects')();
   require('./evaluators/simple')();
   require('./evaluators/strings')();
-
+  require('./reflection/is')();
 });
