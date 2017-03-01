@@ -5,27 +5,16 @@
     "name": "Jason Corns",
     "email": "jason.corns@peopleconnect.us"
   },
-  "licence": "Internal; Closed.",
+  "license": "MIT",
   "version": "2.0.2",
-  "private": true,
+  "homepage": "https://peopleconnectus.github.io/brie/",
   "main": "lib/brie",
   "repository": {
     "type": "git",
-    "url": "https://github.com/peopleconnectus/brie"
+    "url": "git+https://github.com/peopleconnectus/brie.git"
   },
   "keywords": [
-    "feature",
-    "flip",
-    "toggle",
-    "feature flipping",
-    "feature toggling",
-    "continuous integration",
-    "business rules engine",
-    "business rules management system",
-    "B.R.E.",
-    "B.R.M.S",
-    "BRE",
-    "BRMS"
+    "feature", "flip", "toggle", "feature flipping", "feature toggling", "continuous integration", "business rules engine", "business rules management system", "B.R.E.", "B.R.M.S", "BRE", "BRMS"
   ],
   "dependencies": {
     "lodash": "4.15.0",
@@ -38,11 +27,10 @@
   "devDependencies": {
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
-    "mocha-bamboo-reporter": "^1.1.1",
     "mocha-eslint": "^3.0.1"
   },
   "scripts": {
     "test": "node node_modules/.bin/mocha",
-    "cover": "node node_modules/.bin/istanbul cover _mocha -- -R mocha-bamboo-reporter"
+    "cover": "node node_modules/.bin/istanbul cover _mocha"
   }
 }
