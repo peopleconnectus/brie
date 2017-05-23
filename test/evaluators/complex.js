@@ -13,7 +13,13 @@ module.exports = function () {
         hasNumberValue: 181818,
         hasObjectValue: { a: 1, b: 2 },
         hasDateValue: new Date(),
-        hasBooleanValue: true
+        hasBooleanValue: true,
+        nested: {
+            one: {
+                a: 1,
+                b: 2
+            }
+        }
       };
       this.features = {
         // combination comparisons
@@ -74,6 +80,28 @@ module.exports = function () {
             }
           ],
           "criteriaLogic": "any"
+        },
+        "canCheckNestedTraits": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "nested.one.a",
+                "comparison": "below",
+                "value": 5
+              }
+            }
+          ]
+        },
+        "canCheckBadNestedTraits": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "nested.one.a.nope",
+                "comparison": "below",
+                "value": 5
+              }
+            }
+          ]
         },
         // "for-ids" check
         "canCheckAllowIds": {
@@ -223,6 +251,12 @@ module.exports = function () {
     });
     it('"canCheckAllowIds" should evaluate to true', function () {
       assert(this.bSetup.get("canCheckAllowIds"));
+    });
+    it('"canCheckNestedTraits" should evaluate to true', function () {
+      assert(this.bSetup.get("canCheckNestedTraits"));
+    });
+    it('"canCheckBadNestedTraits" bad trait keys should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckBadNestedTraits"));
     });
     it('percentScale should evaluate', function () {
       assert(typeof this.bSetup.get("canCheckPercentScale") === 'boolean');
