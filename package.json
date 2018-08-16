@@ -28,8 +28,8 @@
     "BRMS"
   ],
   "dependencies": {
-    "lodash": "4.15.0",
-    "debug": "2.6.0"
+    "debug": "^3.1.0",
+    "lodash": "4.17.10"
   },
   "readmeFilename": "README.md",
   "bugs": {
@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
-    "mocha-eslint": "^3.0.1"
+    "mocha": "^5.2.0",
+    "mocha-eslint": "^4.1.0"
   },
   "scripts": {
     "test": "node node_modules/.bin/mocha",
