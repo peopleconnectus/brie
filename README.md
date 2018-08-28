@@ -82,9 +82,10 @@ The most complex criteria mechanism, `has` will evaluate the test data (first ar
   * trait (required) - the name of a property to find on data object.  If comparison and value are omitted, the evaluation will simply verify the existence of the property on the object.
   * comparison (optional) - one of an existing set of comparison instructions :
     * equals (string, date, number, object)
-    * like (string)
     * below (string, date, number, object)
     * above (string, date, number, object)
+    * between (number)
+    * like (string)
     * longer (string, date, number, object)
     * shorter (string, date, number, object)
     * older (date)
@@ -114,7 +115,8 @@ Possible comparisons are:
  * (`numeric`) - [alias: "shorter"] a less-than-or-equal-to check that the comparison number is smaller than the check value.
  * (`object`) - an array or object is said to be "below" another if it is fully contained in the other.  That is: if the comparison object contains the data object, then the data object is below the comparison object.  If the objects are equal, the `below` comparison is inherently false.  If the data object is a non-array object but the comparison object is an array, then the [_.difference()](https://lodash.com/docs#difference) comparison is done between the keys of the data object and the comparison array.  If both data and comparison objects are arrays, a lodash [_.difference()](https://lodash.com/docs#difference) between comparison and data is compare with `[]`, indicating that the data object fully contains the comparison object.
  * (`string`) - performs a javascript string "less-than-or-equal" comparison.  As a loosely-typed language, this could be anything, really.
-
+##### between
+ * (`number`) - a numeric evaluator that checks to see if the comparison value is greater than, or equal to, the lesser of two bounds and simultaneously less than, or equal to, the greater of two bounds.  This method expects array notation from criteria, and will default to array notation when the supplied value does not comply.  Accepts `Number` values from `Number.NEGATIVE_INFINITY` to `Number.POSITIVE_INFINITY`.
 ##### like
  * (`string`) - a **non-strict** check that the `toLowerCase()` comparison string is equal to the `toString().toLowerCase()` check value.
 
