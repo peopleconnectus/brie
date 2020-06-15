@@ -1,8 +1,5 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#number evaluation', function () {
@@ -69,16 +66,17 @@ module.exports = function () {
         showLogs: false
       });
     });
-    it('"canCheckHigherNumber" should evaluate to true', function () {
+
+    it('"canCheckHigherNumber"                                should evaluate to true', function () {
       assert(this.bSetup.get("canCheckHigherNumber"));
     });
-    it('"canCheckLowerNumber" should evaluate to true', function () {
+    it('"canCheckLowerNumber"                                 should evaluate to true', function () {
       assert(this.bSetup.get("canCheckLowerNumber"));
     });
-    it('"canCheckEqualNumber" should evaluate to true', function () {
+    it('"canCheckEqualNumber"                                 should evaluate to true', function () {
       assert(this.bSetup.get("canCheckEqualNumber"));
     });
-    it('"canCheckInvalidNumber" should evaluate to false', function () {
+    it('"canCheckInvalidNumber"                               should evaluate to false', function () {
       assert(!this.bSetup.get("canCheckInvalidNumber"));
     });
   });

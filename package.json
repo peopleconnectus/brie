@@ -17,20 +17,19 @@
     "feature", "flip", "toggle", "feature flipping", "feature toggling", "continuous integration", "business rules engine", "business rules management system", "B.R.E.", "B.R.M.S", "BRE", "BRMS"
   ],
   "dependencies": {
-    "lodash": "4.15.0",
-    "debug": "2.6.0"
+    "lodash": "^4.17.15"
   },
   "readmeFilename": "README.md",
   "bugs": {
     "url": "https://github.com/peopleconnectus/brie/issues"
   },
   "devDependencies": {
-    "istanbul": "^0.4.5",
-    "mocha": "^3.2.0",
-    "mocha-eslint": "^3.0.1"
+    "mocha": "^6.2.2",
+    "mocha-eslint": "^3.0.1",
+    "nyc": "^14.1.1"
   },
   "scripts": {
-    "test": "node node_modules/.bin/mocha",
-    "cover": "node node_modules/.bin/istanbul cover _mocha"
+    "test": "mocha",
+    "cover": "nyc --reporter=lcov --reporter=text-summary npm run test"
   }
 }

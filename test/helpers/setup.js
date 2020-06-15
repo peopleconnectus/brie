@@ -1,5 +1,5 @@
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
   describe('Setup', function () {
     before(function () {
@@ -15,7 +15,7 @@ module.exports = function () {
     });
     it('should return a live object', function () {
 
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {
           // always evaluator
@@ -33,7 +33,7 @@ module.exports = function () {
       assert(!!(bSetup));
     });
     it('should reject invalid feature', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: { "invalidFeature": "no a valid type" },
         overrides: {},
@@ -43,7 +43,7 @@ module.exports = function () {
     });
     it('should handle disabled features', function () {
 
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {
           // always evaluator
@@ -68,7 +68,7 @@ module.exports = function () {
       assert(bSetup.getAll());
     });
     it('accepts missing criteria', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {
           "acceptsMissingCrits": {
@@ -80,7 +80,7 @@ module.exports = function () {
       assert(!bSetup.get('acceptsMissingCrits'));
     });
     it('should return false for simple criteria', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {
           "ignoresMissingCriteria": { "criteria": ["string"] }
@@ -91,7 +91,7 @@ module.exports = function () {
       assert(bSetup.getAll());
     });
     it('should return false for missing criteria', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {
           "ignoresMissingCriteria": { "criteria": [{}] }
@@ -102,7 +102,7 @@ module.exports = function () {
       assert(bSetup.getAll());
     });
     it('accepts missing features', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         overrides: {},
         showLogs: false
@@ -110,7 +110,7 @@ module.exports = function () {
       assert(!!(bSetup));
     });
     it('accepts missing overrides', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         data: this.checkData,
         features: {},
         showLogs: false
@@ -118,7 +118,7 @@ module.exports = function () {
       assert(bSetup.getAll());
     });
     it('accepts missing data', function () {
-      var bSetup = brie.setup({
+      const bSetup = brie.setup({
         overrides: {},
         features: {},
         showLogs: false
