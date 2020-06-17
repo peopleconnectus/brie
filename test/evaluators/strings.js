@@ -1,160 +1,156 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
   describe('#string evaluation', function () {
     before(function () {
-      var checkData = {
-          id: 4,
-          hasStringValue: "a string check value"
+      const checkData = {
+        id: 4,
+        hasStringValue: "a string check value"
+      };
+      const features = {
+        // simple string
+        "canCheckHasString": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue"
+              }
+            }
+          ]
         },
-        features = {
-          // simple string
-          "canCheckHasString": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue"
-                }
+        "canCheckStringEqual": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "equals",
+                "value": "a string check value"
               }
-            ]
-          },
-          "canCheckStringEqual": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "equals",
-                  "value": "a string check value"
-                }
+            }
+          ]
+        },
+        "canCheckNullComparison": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "equals",
+                "value": null
               }
-            ]
-          },
-          "canCheckNullComparison": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "equals",
-                  "value": null
-                }
+            }
+          ]
+        },
+        "similarStrings": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "like",
+                "value": "A String Check Value"
               }
-            ]
-          },
-          "similarStrings": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "like",
-                  "value": "A String Check Value"
-                }
+            }
+          ]
+        },
+        "similarStringsNull": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "like",
+                "value": null
               }
-            ]
-          },
-          "similarStringsNull": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "like",
-                  "value": null
-                }
+            }
+          ]
+        },
+        "stringsBelow": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "below",
+                "value": "A different string value"
               }
-            ]
-          },
-          "stringsBelow": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "below",
-                  "value": "A different string value"
-                }
+            }
+          ]
+        },
+        "stringsBelowNull": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "below",
+                "value": null
               }
-            ]
-          },
-          "stringsBelowNull": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "below",
-                  "value": null
-                }
+            }
+          ]
+        },
+        "stringsAbove": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "above",
+                "value": "A different string value"
               }
-            ]
-          },
-          "stringsAbove": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "above",
-                  "value": "A different string value"
-                }
+            }
+          ]
+        },
+        "stringsAboveNull": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "above",
+                "value": null
               }
-            ]
-          },
-          "stringsAboveNull": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "above",
-                  "value": null
-                }
+            }
+          ]
+        },
+        "stringsLonger": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "longer",
+                "value": "A different string value"
               }
-            ]
-          },
-          "stringsLonger": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "longer",
-                  "value": "A different string value"
-                }
+            }
+          ]
+        },
+        "stringsLongerNull": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "longer",
+                "value": null
               }
-            ]
-          },
-          "stringsLongerNull": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "longer",
-                  "value": null
-                }
+            }
+          ]
+        },
+        "stringsShorter": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "shorter",
+                "value": "A different string value"
               }
-            ]
-          },
-          "stringsShorter": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "shorter",
-                  "value": "A different string value"
-                }
+            }
+          ]
+        },
+        "stringsShorterNull": {
+          "criteria": [
+            {
+              "has": {
+                "trait": "hasStringValue",
+                "comparison": "shorter",
+                "value": null
               }
-            ]
-          },
-          "stringsShorterNull": {
-            "criteria": [
-              {
-                "has": {
-                  "trait": "hasStringValue",
-                  "comparison": "shorter",
-                  "value": null
-                }
-              }
-            ]
-          }
-        };
+            }
+          ]
+        }
+      };
       this.bSetup = brie.setup({
         data: checkData,
         features: features,
@@ -162,43 +158,43 @@ module.exports = function () {
         showLogs: false
       });
     });
-    it('"canCheckHasString" should evaluate to true', function () {
+    it('"canCheckHasString"                                   should evaluate to true', function () {
       assert(this.bSetup.get("canCheckHasString"));
     });
-    it('"canCheckStringEqual" should evaluate to true', function () {
+    it('"canCheckStringEqual"                                 should evaluate to true', function () {
       assert(this.bSetup.get("canCheckStringEqual"));
     });
-    it('"canCheckNullComparison" should evaluate to false', function () {
+    it('"canCheckNullComparison"                              should evaluate to false', function () {
       assert(!this.bSetup.get("canCheckNullComparison"));
     });
-    it('string "like" comparison', function () {
+    it('string "like" comparison                              should evaluate to true', function () {
       assert(this.bSetup.get('similarStrings'));
     });
-    it('string "like" comparison against null value', function () {
+    it('string "like" comparison against null value           should evaluate to false', function () {
       assert(!this.bSetup.get('similarStringsNull'));
     });
-    it('string "below" comparison', function () {
+    it('string "below" comparison                             should evaluate to false', function () {
       assert(!this.bSetup.get('stringsBelow'));
     });
-    it('string "below" comparison with a null value', function () {
+    it('string "below" comparison with a null value           should evaluate to false', function () {
       assert(!this.bSetup.get('stringsBelowNull'));
     });
-    it('string "above" comparison', function () {
+    it('string "above" comparison                             should evaluate to true', function () {
       assert(this.bSetup.get('stringsAbove'));
     });
-    it('string "above" comparison with a null value', function () {
+    it('string "above" comparison with a null value           should evaluate to true', function () {
       assert(this.bSetup.get('stringsAboveNull'));
     });
-    it('string "longer" comparison', function () {
+    it('string "longer" comparison                            should evaluate to false', function () {
       assert(!this.bSetup.get('stringsLonger'));
     });
-    it('string "longer" comparison with a null value', function () {
+    it('string "longer" comparison with a null value          should evaluate to true', function () {
       assert(this.bSetup.get('stringsLongerNull'));
     });
-    it('string "shorter" comparison', function () {
+    it('string "shorter" comparison                           should evaluate to true', function () {
       assert(this.bSetup.get('stringsShorter'));
     });
-    it('string "shorter" comparison with a null value', function () {
+    it('string "shorter" comparison with a null value         should evaluate to false', function () {
       assert(!this.bSetup.get('stringsShorterNull'));
     });
   });

@@ -1,9 +1,5 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
   describe('#object evaluation', function () {
     before(function () {
@@ -20,14 +16,14 @@ module.exports = function () {
     });
     describe('#objects', function () {
       before(function () {
-        var features = {
+        const features = {
           // object comparator
           "canCheckEqualObject": {
             "criteria": [
               {
                 "has": {
                   "trait": "hasObjectValue",
-                  "comparison": "equal",
+                  "comparison": "equals",
                   "value": { a: 1, b: 2 }
                 }
               }
@@ -129,44 +125,45 @@ module.exports = function () {
           showLogs: false
         });
       });
-      it('"canCheckEqualObject" should evaluate to false', function () {
-        assert(!this.bSetup.get("canCheckEqualObject"));
+
+      it('"canCheckEqualObject"                               should evaluate to true', function () {
+        assert(this.bSetup.get("canCheckEqualObject"));
       });
-      it('"canCheckAboveObject" should evaluate to false', function () {
+      it('"canCheckAboveObject"                               should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckAboveObject"));
       });
-      it('"canCheckAboveObjectEqual" should evaluate to false', function () {
+      it('"canCheckAboveObjectEqual"                          should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckAboveObjectEqual"));
       });
-      it('"canCheckAboveObjectMixed" should evaluate to true', function () {
+      it('"canCheckAboveObjectMixed"                          should evaluate to true', function () {
         assert(!this.bSetup.get("canCheckAboveObjectMixed"));
       });
-      it('"canCheckBelowObject" should evaluate to false', function () {
+      it('"canCheckBelowObject"                               should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckBelowObject"));
       });
-      it('"canCheckBelowObjectEqual" should evaluate to false', function () {
+      it('"canCheckBelowObjectEqual"                          should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckBelowObjectEqual"));
       });
-      it('"canCheckBelowObjectMixed" should evaluate to false', function () {
+      it('"canCheckBelowObjectMixed"                          should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckBelowObjectMixed"));
       });
-      it('"canCheckShorterObject" should evaluate to true', function () {
+      it('"canCheckShorterObject"                             should evaluate to true', function () {
         assert(this.bSetup.get("canCheckShorterObject"));
       });
-      it('"canCheckLongerObject" should evaluate to false', function () {
+      it('"canCheckLongerObject"                              should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckLongerObject"));
       });
 
     });
     describe('#arrays', function () {
       before(function () {
-        var features = {
+        const features = {
           "canCheckEqualArray": {
             "criteria": [
               {
                 "has": {
                   "trait": "hasSimpleArray",
-                  "comparison": "equal",
+                  "comparison": "equals",
                   "value": [1, 2, 3]
                 }
               }
@@ -224,19 +221,20 @@ module.exports = function () {
           showLogs: false
         });
       });
-      it('"canCheckEqualArray" should evaluate to true', function () {
-        assert(!this.bSetup.get("canCheckEqualArray"));
+
+      it('"canCheckEqualArray"                                should evaluate to true', function () {
+        assert(this.bSetup.get("canCheckEqualArray"));
       });
-      it('"canCheckAboveArray" should evaluate to false', function () {
+      it('"canCheckAboveArray"                                should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckAboveArray"));
       });
-      it('"canCheckAboveArrayMixed" should evaluate to false', function () {
+      it('"canCheckAboveArrayMixed"                           should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckAboveArrayMixed"));
       });
-      it('"canCheckBelowArray" should evaluate to false', function () {
+      it('"canCheckBelowArray"                                should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckBelowArray"));
       });
-      it('"canCheckBelowArrayMixed" should evaluate to false', function () {
+      it('"canCheckBelowArrayMixed"                           should evaluate to false', function () {
         assert(!this.bSetup.get("canCheckBelowArrayMixed"));
       });
     });

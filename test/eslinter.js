@@ -1,15 +1,15 @@
-var linter = require('mocha-eslint'),
-    path = require('path'),
-    rootDir = path.join(__dirname, '../'),
-    patterns = [
-        path.join(rootDir, 'lib'),
-        path.join(rootDir, 'ext'),
-        path.join(__dirname, 'eslinter.js')
-    ],
-    options = {
-        alwaysWarn: false
-    };
+const linter = require('mocha-eslint');
+const path = require('path');
+const rootDir = path.join(__dirname, '../');
+const patterns = [
+  path.join(rootDir, 'lib'),
+  path.join(rootDir, 'ext'),
+  path.join(__dirname, 'eslinter.js')
+];
+const options = {
+  alwaysWarn: false
+};
 
 describe('Runs eslint against codebase', function () {
-    linter(patterns, options);
+  linter(patterns, options);
 });

@@ -1,8 +1,5 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#date evaluation', function () {
@@ -130,28 +127,28 @@ module.exports = function () {
     it('Date equality comparison', function () {
       assert(this.bSetup.get("canCheckEqualDate"));
     });
-    it('Date equality comparison against a number', function () {
+    it('Date equality comparison against a number             should evaluate to true', function () {
       assert(!this.bSetup.get("canCheckEqualDateNumber"));
     });
-    it('Date equality comparison against string', function () {
+    it('Date equality comparison against string               should evaluate to true', function () {
       assert(!this.bSetup.get("canCheckEqualDateString"));
     });
-    it('Date difference comparison (older)', function () {
+    it('Date difference comparison (older)                    should evaluate to true', function () {
       assert(this.bSetup.get("canCheckHigherDate"));
     });
-    it('Date difference comparison against a number (older)', function () {
+    it('Date difference comparison against a number (older)   should evaluate to true', function () {
       assert(this.bSetup.get("canCheckHigherDateNumber"));
     });
-    it('Date equality comparison against string (older)', function () {
+    it('Date equality comparison against string (older)       should evaluate to false', function () {
       assert(!this.bSetup.get("canCheckHigherDateString"));
     });
-    it('Date difference comparison (younger)', function () {
+    it('Date difference comparison (younger)                  should evaluate to true', function () {
       assert(this.bSetup.get("canCheckLowerDate"));
     });
-    it('Date difference comparison against a number (younger)', function () {
+    it('Date difference comparison against a number (younger) should evaluate to true', function () {
       assert(this.bSetup.get("canCheckLowerDateNumber"));
     });
-    it('Date difference comparison against string (younger)', function () {
+    it('Date difference comparison against string (younger)   should evaluate to false', function () {
       assert(!this.bSetup.get("canCheckLowerDateString"));
     });
   });

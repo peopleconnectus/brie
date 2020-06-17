@@ -1,6 +1,6 @@
 This is brie [![Build Status](https://travis-ci.org/peopleconnectus/brie.svg?branch=master)](https://travis-ci.org/peopleconnectus/brie)
 =============
-This Business Rules Integration Engine (B.R.I.E., or "brie") is a transient Feature Flipping Criteria System for Node.
+This Business Rules Integration Engine (B.R.E, or "brie") is a transient Feature Flipping Criteria System for Node.
 
 ```
 npm install brie
@@ -10,7 +10,7 @@ npm install brie
 Below is a simple example that uses __brie__ to deliver feature flags based on a determined (set) of User Variant(s):
 ```javascript
 // Include brie
-var brie = require('brie');
+const brie = require('brie');
 
 // given an inbound data object called "user" plus a set of features (see below) called "featureSet"
 brie.setup(
@@ -19,31 +19,33 @@ brie.setup(
     features: featureSet
   }
 );
-var flags = brie.getAll();
+const flags = brie.getAll();
 // expect {feature1: true, feature2: false, ... } from get() or getAll()
 ```
 
 ### Criteria
 Criteria are the predefined rule types that __brie__ tests data against, per feature.  Each feature in the feature set consists of at least one criteria.  A feature may contain multiple criteria, joined across a logical "and" or "any" as dictated by the `criteriaLogic`:
 ```javascript
-  var featureSet = multiPartTestCase : {
-    criteria : [
-      {
-        has: {
-          "trait": "messageCount",
-          "comparison": "above",
-          "value": 2
+  const featureSet = {
+    multiPartTestCase : {
+      criteria : [
+        {
+          has: {
+            "trait": "messageCount",
+            "comparison": "above",
+            "value": 2
+          }
+        },
+        {
+          has: {
+            "trait": "creationDate",
+            "comparison": "older",
+            "value": "12/Dec/2000"
+          }
         }
-      },
-      {
-        has: {
-          "trait": "creationDate",
-          "comparison": "older",
-          "value": "12/Dec/2000"
-        }
-      }
-    ],
-    criteriaLogic: "any"
+      ],
+      criteriaLogic: "any"
+    }
   };
 // expect {multiPartTestCase: true} from get() and getAll()
 ```
@@ -59,20 +61,15 @@ Provided an object containing an "id" property, brie evaluates the presence of t
 `Always` asks brie to "always" respond with the given input.  Why?  Code consistency, mainly.
 
 #### percentScale(object, opts)
-The `object.id` is used to calculate a percentage, modified by the salt value. If the resulting, salted, number is within range, returns true; otherwise false.
-
 ```
   opts = {
     percentMin:[0-1],
     percentMax:[0-1],
-    salt:[number],
-    testPhase:[string]
+    salt:[number]
   }
 ```
 
-`testPhase` is used for logging and debugging only, and does not impact the algorithm.
-
-`salt` is used to allow the same `id` to map to a different boolean amongst the feature flags. Thus you can have one flag with the `{ percentMin: 0, percentMax: 50, salt:0.5 }` return true, and another with `{ percentMin: 0, percentMax: 50, salt: 0.9 }` return false. Conversely you can tie together a booleans using the same salt.
+The `object.id` is used to calculate a percentage, modified by the salt value. If the resulting, salted, number is within range, returns true; otherwise false.
 
 #### has(test data [object], comparison data [object])
 The most complex criteria mechanism, `has` will evaluate the test data (first argument) against the trait, comparator and value provided in the second argument.  If the test data has the trait and the associated value evaluates properly considering the comparison value, then true is returned.
@@ -149,7 +146,7 @@ Tests if a key from a source object has property of a noted __type__.
 ### Features
 Features contain sets of criteria to test users against. The value associated with the criteria is passed in as the data argument of the criteria function. A user will have a featured enabled if they match all listed criteria, otherwise the feature is disabled. Features can include other optional properties for context. Features are described as follows:
 ```javascript
-var ExampleFeaturesObject = {
+const ExampleFeaturesObject = {
   "canCheckAlways": {
     "criteria": [
       {
@@ -229,14 +226,14 @@ Once initialized, via `setup()`, brie can be queried for the outcome of any or a
 ### get
 `get` returns the outcome of a single feature, and requires the string name of the feature, as an argument, and is invoked as
 ```javascript
-var isHigherNumber = brie.get('canCheckHigherNumber');
+const isHigherNumber = brie.get('canCheckHigherNumber');
 // isHigherNumber = true;
 ```
 
 ### getAll
 `getAll` returns a hash of all features and their evaluated value, including overrides, as a shallow javascript object.
 ```javascript
-var allFeatures = brie.getAll();
+const allFeatures = brie.getAll();
 // allFeatures = {
 // canCheckAlways: true,
 // canCheckHasString: true,
@@ -248,7 +245,7 @@ var allFeatures = brie.getAll();
 ### Chaining
 A single method can be chained against the `setup` method. `setup` returns `brie`, which has both a `get` and `getAll` method.  Further chaining is not available, since `get` returns a boolean and `getAll` returns an object.
 ```javascript
-var allFeatures = brie.setup({
+const allFeatures = brie.setup({
     data: data_in,
     features: flags_in,
     overrides: overrides,
