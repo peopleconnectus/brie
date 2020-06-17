@@ -1,6 +1,6 @@
 This is brie [![Build Status](https://travis-ci.org/peopleconnectus/brie.svg?branch=master)](https://travis-ci.org/peopleconnectus/brie)
 =============
-This Business Rules Integration Engine (B.R.E, or "brie") is a transient Feature Flipping Criteria System for Node.
+This Business Rules Integration Engine (B.R.I.E, or "brie") is a transient Feature Flipping Criteria System for Node.
 
 ```
 npm install brie
