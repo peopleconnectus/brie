@@ -1,15 +1,11 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
 
   describe('#simple evaluation', function () {
     before(function () {
 
-      var checkData = {
+      this.checkData = {
         id: 123456789,
         hasStringValue: "a string check value",
         hasNumberValue: 181818,
@@ -17,7 +13,7 @@ module.exports = function () {
         hasDateValue: new Date(),
         hasBooleanValue: true
       };
-      var features = {
+      this.features = {
         // always evaluator
         "canCheckAlways": {
           "criteria": [
@@ -46,29 +42,21 @@ module.exports = function () {
         }
       };
       this.bSetup = brie.setup({
-        data: checkData,
-        features: features,
+        data: this.checkData,
+        features: this.features,
         overrides: {},
         showLogs: false
       });
     });
-    for (var feature in this.features) {
-      if (this.features.hasOwnProperty(feature)) {
-        (function (f) {
-          it('"' + f + '" should evaluate to boolean', function () {
-            assert((typeof this.bSetup.get(f) === 'boolean'));
-          });
-        })(feature);
-      }
-    }
-    it('"canCheckAlways" should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckAlways"));
-    });
-    it('should pass the "getAll" features', function () {
-      var allOut = this.bSetup.getAll();
+
+    it('"getAll" features method                              should succeed', function () {
+      const allOut = this.bSetup.getAll();
       assert(!!(allOut));
     });
-    it('will not error on missing feature', function () {
+    it('"canCheckAlways"                                      should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckAlways"));
+    });
+    it('an unknown feature flag name                          should evaluate to false', function () {
       assert(!this.bSetup.get('noCheckFunction'))
     });
   });

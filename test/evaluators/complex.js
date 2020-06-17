@@ -1,9 +1,5 @@
-/**
- * Created by j.corns on 2/22/17.
- */
-
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
   describe('#complex evaluation', function () {
     before(function () {
@@ -14,11 +10,16 @@ module.exports = function () {
         hasObjectValue: { a: 1, b: 2 },
         hasDateValue: new Date(),
         hasBooleanValue: true,
+        altKey: 88787878787877,
         nested: {
-            one: {
-                a: 1,
-                b: 2
-            }
+          one: {
+            id: 1234,
+            a: 1,
+            b: 2
+          },
+          two: {
+            a: false
+          }
         }
       };
       this.features = {
@@ -81,7 +82,111 @@ module.exports = function () {
           ],
           "criteriaLogic": "any"
         },
-        "canCheckNestedTraits": {
+        "canCheckAllowIds": {
+          "criteria": [
+            {
+              "allowIDs": [1234, 5678, 91011, 123456789]
+            }
+          ]
+        },
+        "canCheckNoInvalidAllowIds": {
+          "criteria": [
+            {
+              "allowIDs": [1234, 5678, 91011]
+            }
+          ]
+        },
+        "canCheckAllowValues": {
+          "criteria": [
+            {
+              "allowValues": {
+                "values": [1234, 5678, 91011, 123456789],
+                "trait": "id"
+              }
+            }
+          ]
+        },
+        "canCheckAllowValuesCustom": {
+          "criteria": [
+            {
+              "allowValues": {
+                "values": [1234, 5678, 91011, 123456789, 88787878787877],
+                "trait": "altKey"
+              }
+            }
+          ]
+        },
+        "canCheckNoInvalidAllowValuesCustom": {
+          "criteria": [
+            {
+              "allowValues": {
+                "values": [1234, 5678, 91011, 123456789],
+                "trait": "altKey"
+              }
+            }
+          ]
+        },
+        "canCheckRejectValues": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [1234, 5678, 91011, 123456789],
+                "trait": "id"
+              }
+            }
+          ]
+        },
+        "canCheckRejectDeepValues": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [1234, 5678, 91011, 123456789],
+                "trait": "nested.a.id"
+              }
+            }
+          ]
+        },
+        "canCheckRejectDeepBooleanValues": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [1234, 5678, 91011, 123456789],
+                "trait": "nested.two.a"
+              }
+            }
+          ]
+        },
+        "canCheckRejectValuesCustom": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [1234, 5678, 91011, 123456789, 88787878787877],
+                "trait": "altKey"
+              }
+            }
+          ]
+        },
+        "canCheckNoInvalidRejectValuesCustom": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [5555, 6666, 7777],
+                "trait": "altKey"
+              }
+            }
+          ]
+        },
+        "canCheckNoInvalidRejectDeepValuesCustom": {
+          "criteria": [
+            {
+              "rejectValues": {
+                "values": [5555, 6666, 7777],
+                "trait": "nested.two.three"
+              }
+            }
+          ]
+        },
+        "canCompareNestedTraits": {
           "criteria": [
             {
               "has": {
@@ -89,25 +194,6 @@ module.exports = function () {
                 "comparison": "below",
                 "value": 5
               }
-            }
-          ]
-        },
-        "canCheckBadNestedTraits": {
-          "criteria": [
-            {
-              "has": {
-                "trait": "nested.one.a.nope",
-                "comparison": "below",
-                "value": 5
-              }
-            }
-          ]
-        },
-        // "for-ids" check
-        "canCheckAllowIds": {
-          "criteria": [
-            {
-              "allowIDs": [1234, 5678, 91011, 123456789]
             }
           ]
         },
@@ -119,7 +205,6 @@ module.exports = function () {
                 percentMin: 0,
                 percentMax: .4,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -130,7 +215,6 @@ module.exports = function () {
               "percentScale": {
                 percentMax: .4,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -141,7 +225,6 @@ module.exports = function () {
               "percentScale": {
                 percentMin: .4,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -153,7 +236,6 @@ module.exports = function () {
                 percentMin: "zero",
                 percentMax: .4,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -165,7 +247,6 @@ module.exports = function () {
                 percentMin: .1,
                 percentMax: "point-four",
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -177,7 +258,6 @@ module.exports = function () {
                 percentMin: 22,
                 percentMax: 72,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -189,7 +269,6 @@ module.exports = function () {
                 percentMin: 1,
                 percentMax: 50,
                 salt: 9,
-                testPhase: "Can Check Percent Scale"
               }
             }
           ]
@@ -200,7 +279,6 @@ module.exports = function () {
               "percentScale": {
                 percentMin: 1,
                 percentMax: 50,
-                testPhase: "Needs Salt"
               }
             }
           ]
@@ -212,6 +290,30 @@ module.exports = function () {
                 percentMin: 1,
                 percentMax: 50,
                 salt: 9
+              }
+            }
+          ]
+        },
+        "canCheckPercentScaleAlternateKey": {
+          "criteria": [
+            {
+              "percentScale": {
+                percentMin: 1,
+                percentMax: 10,
+                salt: 44,
+                "trait": "altKey"
+              }
+            }
+          ]
+        },
+        "canCheckPercentScaleMissingKey": {
+          "criteria": [
+            {
+              "percentScale": {
+                percentMin: 1,
+                percentMax: 10,
+                salt: 44,
+                "trait": "missing_key"
               }
             }
           ]
@@ -231,59 +333,92 @@ module.exports = function () {
       this.bSetup = brie.setup({
         data: this.checkData,
         features: this.features,
-        overrides: {"fullCheckWithOverrides" : false},
+        overrides: { "fullCheckWithOverrides": false },
         showLogs: false
       });
 
     });
 
-    it('"canCheckComplexAll" should evaluate to false', function () {
+    it('"canCheckComplexAll"                                  should evaluate to false', function () {
       assert(!this.bSetup.get("canCheckComplexAll"));
     });
-    it('"canCheckComplexAny" should evaluate to true', function () {
+    it('"canCheckComplexAny"                                  should evaluate to true', function () {
       assert(this.bSetup.getAll());
     });
-    it('"canCheckSimpleAny" should evaluate to true', function () {
+    it('"canCheckSimpleAny"                                   should evaluate to true', function () {
       assert(this.bSetup.get('canCheckSimpleAny'));
     });
-    it('"fullCheckWithOverrides" should evaluate to false', function () {
+    it('"fullCheckWithOverrides"                              should evaluate to false', function () {
       assert(!this.bSetup.getAll()['fullCheckWithOverrides']);
     });
-    it('"canCheckAllowIds" should evaluate to true', function () {
+    it('"canCheckAllowIds"                                    should evaluate to true', function () {
       assert(this.bSetup.get("canCheckAllowIds"));
     });
-    it('"canCheckNestedTraits" should evaluate to true', function () {
-      assert(this.bSetup.get("canCheckNestedTraits"));
+    it('"canCheckNoInvalidAllowIds"                           should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckNoInvalidAllowIds"));
     });
-    it('"canCheckBadNestedTraits" bad trait keys should evaluate to false', function () {
-      assert(!this.bSetup.get("canCheckBadNestedTraits"));
+    it('"canCheckAllowValues"                                 should evaluate to true', function () {
+      assert(this.bSetup.get("canCheckAllowValues"));
     });
-    it('percentScale should evaluate', function () {
+    it('"canCheckAllowValuesCustom"                           should evaluate to true', function () {
+      assert(this.bSetup.get("canCheckAllowValuesCustom"));
+    });
+    it('"canCheckNoInvalidAllowValuesCustom"                  should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckNoInvalidAllowValuesCustom"));
+    });
+    it('"canCheckRejectValues"                                should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckRejectValues"));
+    });
+    it('"canCheckRejectDeepValues"                            should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckRejectDeepValues"));
+    });
+    it('"canCheckRejectDeepBooleanValues"                     should evaluate to true', function () {
+      assert(this.bSetup.get("canCheckRejectDeepBooleanValues"));
+    });
+    it('"canCheckRejectValuesCustom"                          should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckRejectValuesCustom"));
+    });
+    it('"canCheckNoInvalidRejectValuesCustom"                 should evaluate to true', function () {
+      assert(this.bSetup.get("canCheckNoInvalidRejectValuesCustom"));
+    });
+    it('"canCheckNoInvalidRejectDeepValuesCustom"             should evaluate to false', function () {
+      assert(!this.bSetup.get("canCheckNoInvalidRejectDeepValuesCustom"));
+    });
+    it('"canCompareNestedTraits"                              should evaluate to true', function () {
+      assert(this.bSetup.get("canCompareNestedTraits"));
+    });
+    it('percentScale                                          should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScale") === 'boolean');
     });
-    it('percentScale with no "minimum" should evaluate', function () {
+    it('percentScale with no "minimum"                        should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleNoMin") === 'boolean');
     });
-    it('percentScale with no "maximum" should evaluate', function () {
+    it('percentScale with no "maximum"                        should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleNoMax") === 'boolean');
     });
-    it('percentScale with bad "minimum" should evaluate', function () {
+    it('percentScale with bad "minimum"                       should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleBadMin") === 'boolean');
     });
-    it('percentScale with bad "maximum" should evaluate', function () {
+    it('percentScale with bad "maximum"                       should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleBadMax") === 'boolean');
     });
-    it('percentScale with minimum over 1 should evaluate', function () {
+    it('percentScale with minimum over 1                      should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleBigMin") === 'boolean');
     });
-    it('percentScale with maximum over 1 should evaluate', function () {
+    it('percentScale with maximum over 1                      should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleBigMax") === 'boolean');
     });
-    it('percentScale without salt should evaluate', function () {
+    it('percentScale without salt                             should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleNoSalt") === 'boolean');
     });
-    it('percentScale without label should evaluate', function () {
+    it('percentScale without label                            should evaluate as bool', function () {
       assert(typeof this.bSetup.get("canCheckPercentScaleNoLabel") === 'boolean');
+    });
+    it('percentScale with alternate key                       should evaluate as bool', function () {
+      assert(typeof this.bSetup.get("canCheckPercentScaleAlternateKey") === 'boolean');
+    });
+    it('percentScale with alternate key missing               should evaluate as bool', function () {
+      assert(typeof this.bSetup.get("canCheckPercentScaleMissingKey") === 'boolean');
     });
   });
 };

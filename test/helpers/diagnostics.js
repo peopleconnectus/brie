@@ -1,5 +1,5 @@
-var assert = require("assert");
-var brie = require('../../lib/brie');
+const assert = require("assert");
+const brie = require('../../lib/brie');
 module.exports = function () {
   describe('Diagnostics', function () {
     describe('#exist', function () {
@@ -45,17 +45,14 @@ module.exports = function () {
     });
 
     describe('#criteria are executable', function () {
-      var t_d = brie.diagnostics();
-      for (var c in t_d.criteria) {
-        if (t_d.criteria.hasOwnProperty(c)) {
+      const t_d = brie.diagnostics();
+      Object.keys(t_d.criteria).forEach(c => {
           (function (cta) {
-            it('criteria "' + cta + '" should be a function', function () {
-              var k = typeof t_d.criteria[cta] === 'function';
-              assert(k);
+            it(`criteria "${cta}" should be a function`, function () {
+              assert(typeof t_d.criteria[cta] === 'function');
             });
           })(c);
-        }
-      }
+      });
     });
   });
 };
