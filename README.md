@@ -86,6 +86,8 @@ Provided an object containing a noted trait, brie evaluates the presence of the 
 
 The `object.id` is used to calculate a percentage, modified by the salt value. If the resulting, salted, number is within range, returns true; otherwise false.
 
+`salt` is used to allow the same `id` to map to a different boolean amongst the feature flags. Thus you can have one flag with the `{ percentMin: 0, percentMax: 50, salt:0.5 }` return true, and another with `{ percentMin: 0, percentMax: 50, salt: 0.9 }` return false. Conversely you can tie together a booleans using the same salt.
+
 #### has(test data [object], comparison data [object])
 The most complex criteria mechanism, `has` will evaluate the test data (first argument) against the trait, comparator and value provided in the second argument.  If the test data has the trait and the associated value evaluates properly considering the comparison value, then true is returned.
 
