@@ -1,6 +1,6 @@
 This is brie [![Build Status](https://travis-ci.org/peopleconnectus/brie.svg?branch=master)](https://travis-ci.org/peopleconnectus/brie)
 =============
-This Business Rules Integration Engine (B.R.I.E, or "brie") is a transient Feature Flipping Criteria System for Node.
+This Business Rules Integration Engine (B.R.E, or "brie") is a transient Feature Flipping Criteria System for Node.
 
 ```
 npm install brie
@@ -55,7 +55,22 @@ __brie__ has:
 
 
 #### allowIDs (object, array)
+```
+  opts = {
+    "values": [...]
+  }
+```
 Provided an object containing an "id" property, brie evaluates the presence of the id in the given array, checking for 1 or more entries.
+
+#### allowValues (object, array)
+```
+  opts = {
+    "values": [...],
+    "trait": [String]
+  }
+```
+
+Provided an object containing a noted trait, brie evaluates the presence of the trait in the given array, checking for 1 or more entries.
 
 #### always (object, bool)
 `Always` asks brie to "always" respond with the given input.  Why?  Code consistency, mainly.
@@ -70,8 +85,6 @@ Provided an object containing an "id" property, brie evaluates the presence of t
 ```
 
 The `object.id` is used to calculate a percentage, modified by the salt value. If the resulting, salted, number is within range, returns true; otherwise false.
-
-`salt` is used to allow the same `id` to map to a different boolean amongst the feature flags. Thus you can have one flag with the `{ percentMin: 0, percentMax: 50, salt:0.5 }` return true, and another with `{ percentMin: 0, percentMax: 50, salt: 0.9 }` return false. Conversely you can tie together a booleans using the same salt.
 
 #### has(test data [object], comparison data [object])
 The most complex criteria mechanism, `has` will evaluate the test data (first argument) against the trait, comparator and value provided in the second argument.  If the test data has the trait and the associated value evaluates properly considering the comparison value, then true is returned.
@@ -92,7 +105,7 @@ The most complex criteria mechanism, `has` will evaluate the test data (first ar
 
 If the comparison object contains only `trait` then brie will evaluate the presence of the property on the data object. Comparison and value must be provided together, when one of them is provided.
 
-**Note:** for the purpose of comparisons, "object" refers to both `object` and `array`, with the distinction being left up to the return value of the [_.isArray() method](https://lodash.com/docs#isArray).
+**Note:** for the purpose of comparisons, "object" refers to both `object` and `array`, with the distinction being left up to the return value of the [_.isArray() method](https://lodash.com/docs#isArray) or the native [Array.isArray() method](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/isArray) when availabe.
 
 Possible comparisons are:
 
@@ -145,6 +158,16 @@ Tests if a key from a source object has property of a noted __type__.
    * regex \| regular_expression \| regexp
    * string
    * undefined
+
+#### rejectValues (object, array)
+```
+  opts = {
+    "values": [...],
+    "trait": [String]
+  }
+```
+
+Provided an object containing a noted trait, brie evaluates the presence of the trait in the given array, checking for 1 or more entries.
 ### Features
 Features contain sets of criteria to test users against. The value associated with the criteria is passed in as the data argument of the criteria function. A user will have a featured enabled if they match all listed criteria, otherwise the feature is disabled. Features can include other optional properties for context. Features are described as follows:
 ```javascript
@@ -198,6 +221,26 @@ const ExampleFeaturesObject = {
         }
       }
     ]
+  },
+  "canCheckRejectValues": {
+    "criteria": [
+      {
+        "rejectValues": {
+          "values": [1234, 5678, 91011, 123456789],
+          "trait": "propertyName"
+        }
+      }
+    ]
+  },
+  "canCheckAllowValues": {
+    "criteria": [
+      {
+        "allowValues": {
+          "values": [1234, 5678, 91011, 123456789],
+          "trait": "id"
+        }
+      }
+    ]
   }
 }
 ```
@@ -240,7 +283,9 @@ const allFeatures = brie.getAll();
 // canCheckAlways: true,
 // canCheckHasString: true,
 // canCheckHigherNumber: false,
-// canCheckLowerDate: false
+// canCheckLowerDate: false,
+// canCheckRejectValues: true,
+// canCheckAllowValues: true
 // }
 ```
 
