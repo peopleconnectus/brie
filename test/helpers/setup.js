@@ -125,5 +125,41 @@ module.exports = function () {
       });
       assert(!!(bSetup));
     });
+
+    it("replaces data when called twice", function () {
+        const fakeNumber = '8675309'
+        const features = {
+          allowId:{
+            criteria: [{
+              allowValues: {
+                trait: "aId",
+                values: [
+                  fakeNumber
+                ]
+              }
+            }]
+          }
+        }
+  
+        const b1 = brie.setup({
+          data: {
+            aId: fakeNumber
+          },
+          overrides: {},
+          features,
+        });
+
+        assert.deepEqual(b1.get('allowId'), true)
+
+        const b2 = b1.setup({
+          data: {
+            wrongId: "555555"
+          },
+          overrides: {},
+          features,
+        });
+
+        assert.deepEqual(b2.get('allowId'), false)
+    })
   });
 };
