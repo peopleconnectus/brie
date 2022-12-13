@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "istanbul": "^0.4.5",
-    "mocha": "^8.1.1",
+    "mocha": "^10.2.0",
     "mocha-eslint": "^4.1.0"
   },
   "scripts": {
