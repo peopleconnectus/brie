@@ -130,6 +130,31 @@ Possible comparisons are:
 ##### like
  * (`string`) - a **non-strict** check that the `toLowerCase()` comparison string is equal to the `toString().toLowerCase()` check value.
 
+##### hash_mod
+ * (`string`) - a **deterministic hash-based modulo comparison** for percentage-based rollouts. The input string is hashed using the djb2 algorithm, then modulo 100 is applied to get a bucket (0-99). Returns `true` if the bucket is less than the check value. This enables consistent, deterministic percentage-based feature rollouts using string identifiers like user IDs or UUIDs.
+
+   **Example usage:**
+   ```javascript
+   {
+     "50-percent-rollout": {
+       "criteria": [{
+         "has": {
+           "trait": "userId",
+           "comparison": "hash_mod",
+           "value": 50
+         }
+       }]
+     }
+   }
+   ```
+   This returns `true` for approximately 50% of any string userId values. The same userId will always produce the same result, making rollouts deterministic and consistent.
+
+   **Key properties:**
+   - `value: 0` always returns `false` (0% rollout)
+   - `value: 100` always returns `true` (100% rollout)
+   - `value: 50` returns `true` for ~50% of inputs
+   - Same input string always produces the same result (deterministic)
+
 ##### longer
  * (`object`) - true if the [_.size()](https://lodash.com/docs#size) of the data object is greater than that of the comparison object.
  * (`string`) - true if the length of the comparison string (non-trimmed) is greater than or equal to the length of the check value (non-trimmed).
